@@ -1,0 +1,61 @@
+networks:
+  server-net:
+    external: true
+
+services:
+
+  immich-server:
+    image: ghcr.io/immich-app/immich-server:release
+    container_name: immich-server
+    ports:
+      - "2283:2283"
+    volumes:
+      - /mnt/ssd/immich/upload:/usr/src/app/upload
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      DB_HOSTNAME: immich-postgres
+      DB_USERNAME: ${IMMICH_DB_USER}
+      DB_PASSWORD: ${IMMICH_DB_PASSWORD}
+      DB_DATABASE_NAME: immich
+      REDIS_HOSTNAME: immich-redis
+    depends_on:
+      - immich-postgres
+      - immich-redis
+    restart: unless-stopped
+    networks:
+      - server-net
+
+  immich-machine-learning:
+    image: ghcr.io/immich-app/immich-machine-learning:release
+    container_name: immich-ml
+    volumes:
+      - /mnt/ssd/immich/model-cache:/cache
+    restart: unless-stopped
+    networks:
+      - server-net
+
+  immich-redis:
+    image: redis:7-alpine
+    container_name: immich-redis
+    restart: unless-stopped
+    networks:
+      - server-net
+
+  immich-postgres:
+    image: tensorchord/pgvecto-rs:pg16-v0.2.0
+    container_name: immich-postgres
+    environment:
+      POSTGRES_USER: ${IMMICH_DB_USER}
+      POSTGRES_PASSWORD: ${IMMICH_DB_PASSWORD}
+      POSTGRES_DB: immich
+      POSTGRES_INITDB_ARGS: '--data-checksums'
+    volumes:
+      - /mnt/ssd/immich/postgres:/var/lib/postgresql/data
+    command: >-
+      postgres
+      -c shared_preload_libraries=vectors.so
+      -c 'search_path="$$user", public, vectors'
+      -c shared_buffers=512MB
+    restart: unless-stopped
+    networks:
+      - server-net

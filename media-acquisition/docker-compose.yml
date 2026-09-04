@@ -1,0 +1,96 @@
+# Media Acquisition Stack
+# Runs on a separate laptop on demand — not on the home server.
+#
+# Usage:
+#   1. Mount your external drive (see setup.sh)
+#   2. cp .env.example .env  and fill in MEDIA_ROOT + your PUID/PGID
+#   3. docker compose up -d
+#   4. Configure apps (one-time, see below)
+#   5. docker compose down when done
+#
+# Web UIs (on localhost while running):
+#   Prowlarr   http://localhost:9696   — add indexers here first
+#   Radarr     http://localhost:7878   — movies
+#   Sonarr     http://localhost:8989   — TV shows
+#   qBittorrent http://localhost:8080  — download client
+#
+# All config and media live under MEDIA_ROOT on the external drive,
+# so everything is portable between sessions.
+
+networks:
+  media-net:
+    driver: bridge
+
+services:
+
+  # ── Download client ────────────────────────────────────────────────────────
+  qbittorrent:
+    image: lscr.io/linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+      - WEBUI_PORT=8080
+    volumes:
+      # All paths share the same /data root so Radarr/Sonarr can use
+      # hardlinks instead of copying — saves time and disk space.
+      - ${MEDIA_ROOT}:/data
+      - ${MEDIA_ROOT}/config/qbittorrent:/config
+    ports:
+      - "8080:8080"       # Web UI
+      - "6881:6881"       # Torrent TCP
+      - "6881:6881/udp"   # Torrent UDP
+    networks:
+      - media-net
+    restart: "no"         # Don't start automatically on laptop boot
+
+  # ── Indexer manager ────────────────────────────────────────────────────────
+  prowlarr:
+    image: lscr.io/linuxserver/prowlarr:latest
+    container_name: prowlarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${MEDIA_ROOT}/config/prowlarr:/config
+    ports:
+      - "9696:9696"       # Web UI
+    networks:
+      - media-net
+    restart: "no"
+
+  # ── Movie manager ──────────────────────────────────────────────────────────
+  radarr:
+    image: lscr.io/linuxserver/radarr:latest
+    container_name: radarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${MEDIA_ROOT}:/data
+      - ${MEDIA_ROOT}/config/radarr:/config
+    ports:
+      - "7878:7878"       # Web UI
+    networks:
+      - media-net
+    restart: "no"
+
+  # ── TV show manager ────────────────────────────────────────────────────────
+  sonarr:
+    image: lscr.io/linuxserver/sonarr:latest
+    container_name: sonarr
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - TZ=${TZ}
+    volumes:
+      - ${MEDIA_ROOT}:/data
+      - ${MEDIA_ROOT}/config/sonarr:/config
+    ports:
+      - "8989:8989"       # Web UI
+    networks:
+      - media-net
+    restart: "no"

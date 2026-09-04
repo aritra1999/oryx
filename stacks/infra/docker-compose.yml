@@ -1,0 +1,69 @@
+networks:
+  server-net:
+    external: true
+
+services:
+
+  pihole:
+    image: pihole/pihole:latest
+    container_name: pihole
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "8053:80/tcp"       # admin UI — access via Tailscale: server-ts-ip:8053
+    environment:
+      TZ: ${TZ}
+      WEBPASSWORD: ${PIHOLE_PASSWORD}
+    volumes:
+      - /opt/pihole/etc:/etc/pihole
+      - /opt/pihole/dnsmasq:/etc/dnsmasq.d
+    cap_add:
+      - NET_ADMIN
+    restart: unless-stopped
+    networks:
+      - server-net
+
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: cloudflared
+    command: tunnel --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN}
+    restart: unless-stopped
+    networks:
+      - server-net
+
+  glance:
+    image: glanceapp/glance:latest
+    container_name: glance
+    ports:
+      - "8080:8080"
+    volumes:
+      - /opt/glance:/app/assets
+      - /opt/glance/glance.yml:/app/glance.yml:ro
+    restart: unless-stopped
+    networks:
+      - server-net
+
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    ports:
+      - "9000:9000"         # access via Tailscale: server-ts-ip:9000
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /opt/portainer:/data
+    restart: unless-stopped
+    networks:
+      - server-net
+
+  watchtower:
+    image: containrrr/watchtower:latest
+    container_name: watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      WATCHTOWER_SCHEDULE: "0 0 3 * * *"   # 3am nightly
+      WATCHTOWER_CLEANUP: "true"
+      TZ: ${TZ}
+    restart: unless-stopped
+    networks:
+      - server-net

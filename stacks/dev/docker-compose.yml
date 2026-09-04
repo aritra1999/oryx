@@ -1,0 +1,39 @@
+# On-demand dev containers — start manually, stop when done
+# docker compose up -d postgres-dev
+# docker compose down
+
+networks:
+  server-net:
+    external: true
+
+services:
+
+  postgres-dev:
+    image: postgres:16-alpine
+    container_name: dev-postgres
+    ports:
+      - "5432:5432"   # access via Tailscale: server-ts-ip:5432
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - /opt/dev/postgres:/var/lib/postgresql/data
+    restart: "no"
+    networks:
+      - server-net
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.13.0
+    container_name: dev-elasticsearch
+    ports:
+      - "9200:9200"
+    environment:
+      discovery.type: single-node
+      ELASTIC_PASSWORD: ${ELASTIC_PASSWORD}
+      xpack.security.enabled: "true"
+    volumes:
+      - /opt/dev/elasticsearch:/usr/share/elasticsearch/data
+    mem_limit: 2g
+    restart: "no"
+    networks:
+      - server-net

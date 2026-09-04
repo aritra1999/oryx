@@ -1,0 +1,74 @@
+networks:
+  server-net:
+    external: true
+
+services:
+
+  # ── Shared infrastructure ──────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: prod-postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - /mnt/ssd/affine/postgres:/var/lib/postgresql/data
+      - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
+    restart: unless-stopped
+    networks:
+      - server-net
+
+  redis:
+    image: redis:7-alpine
+    container_name: prod-redis
+    restart: unless-stopped
+    networks:
+      - server-net
+
+  # ── AFFiNE ─────────────────────────────────────────────────────────────────
+  affine:
+    image: ghcr.io/toeverything/affine-graphql:stable
+    container_name: affine
+    ports:
+      - "3000:3010"
+    volumes:
+      - /mnt/ssd/affine/data:/root/.affine/storage
+    environment:
+      REDIS_SERVER_HOST: redis
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/affine
+      AFFINE_ADMIN_EMAIL: ${AFFINE_ADMIN_EMAIL}
+      AFFINE_ADMIN_PASSWORD: ${AFFINE_ADMIN_PASSWORD}
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+    networks:
+      - server-net
+
+  # ── Nextcloud ──────────────────────────────────────────────────────────────
+  nextcloud:
+    image: nextcloud:29-apache
+    container_name: nextcloud
+    ports:
+      - "8081:80"
+    volumes:
+      - /mnt/ssd/nextcloud/data:/var/www/html/data
+      - /mnt/ssd/nextcloud/config:/var/www/html/config
+      - /mnt/ssd/nextcloud/apps:/var/www/html/custom_apps
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_DB: nextcloud
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      REDIS_HOST: redis
+      NEXTCLOUD_ADMIN_USER: ${NEXTCLOUD_ADMIN_USER}
+      NEXTCLOUD_ADMIN_PASSWORD: ${NEXTCLOUD_ADMIN_PASSWORD}
+      NEXTCLOUD_TRUSTED_DOMAINS: "${NEXTCLOUD_DOMAIN} localhost"
+      OVERWRITEPROTOCOL: https
+      OVERWRITECLIURL: https://${NEXTCLOUD_DOMAIN}
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+    networks:
+      - server-net
