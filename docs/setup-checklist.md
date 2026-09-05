@@ -52,10 +52,10 @@ Detailed commands for every step are in [`docs/setup.md`](setup.md).
 ## Optiplex — OS install
 
 - [x] Boot from USB (F12 at POST for boot menu)
-- [ ] Select Ubuntu Server (minimised)
-- [ ] Install target: 256 GB M.2 SATA (SATA-4) — do NOT select the 1 TB
-- [ ] Username: `aritra`, enable OpenSSH during install
-- [ ] Complete install, reboot, remove USB
+- [x] Select Ubuntu Server (minimised)
+- [x] Install target: 256 GB M.2 SATA (SATA-4) — do NOT select the 1 TB
+- [x] Username: `aritra`, enable OpenSSH during install
+- [x] Complete install, reboot, remove USB
 
 ---
 
