@@ -38,7 +38,7 @@ services:
       - "8080:8080"
     volumes:
       - /opt/glance:/app/assets
-      - ./glance.yml:/app/glance.yml:ro
+      - ./config:/app/config
     restart: unless-stopped
     networks:
       - server-net
