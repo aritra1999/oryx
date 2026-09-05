@@ -39,6 +39,7 @@ services:
       IMMICH_API_KEY: ${IMMICH_API_KEY}
       NEXTCLOUD_APP_TOKEN: ${NEXTCLOUD_APP_TOKEN}
       NEXTCLOUD_ADMIN_USER: ${NEXTCLOUD_ADMIN_USER}
+      NEXTCLOUD_BASIC_AUTH: ${NEXTCLOUD_BASIC_AUTH}
     volumes:
       - /opt/glance:/app/assets
       - ./config:/app/config
