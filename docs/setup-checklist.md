@@ -101,14 +101,14 @@ Detailed commands for every step are in [`docs/setup.md`](setup.md).
 
 ## Infrastructure stack
 
-- [ ] Fill in `~/stacks/infra/.env` (Pi-hole password, timezone)
-- [ ] Create `docker-compose.yml` for infra stack
-- [ ] Create `/opt/glance/glance.yml`
-- [ ] Start Pi-hole, Glance, Watchtower, Portainer
+- [x] Fill in `~/stacks/infra/.env` (Pi-hole password, timezone)
+- [x] Create `docker-compose.yml` for infra stack
+- [x] Create `config/glance.yml`
+- [x] Start Pi-hole, Glance, Watchtower, Portainer
 - [ ] Set router primary DNS to `192.168.2.100`
-- [ ] Verify Pi-hole admin loads (`server-ts-ip:8053`)
-- [ ] Verify Glance loads (`server-ts-ip:8080`)
-- [ ] Verify Portainer loads (`server-ts-ip:9000`), create admin account
+- [x] Verify Pi-hole admin loads (`server-ts-ip:8053`)
+- [x] Verify Glance loads (`server-ts-ip:8080`)
+- [x] Verify Portainer loads (`server-ts-ip:9000`), create admin account
 - [ ] Confirm ad-blocking works from a home device
 
 ---
