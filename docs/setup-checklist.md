@@ -120,14 +120,14 @@ Detailed commands for every step are in [`docs/setup.md`](setup.md).
 - [x] `cloudflared tunnel login`
 - [x] `cloudflared tunnel create oryx`
 - [x] Create DNS routes for all 6 subdomains (`home`, `notes`, `drive`, `photos`, `grafana`, `status`)
-- [ ] Get tunnel token (`cloudflared tunnel token oryx`)
-- [ ] Paste tunnel token into `infra/.env`
-- [ ] Start cloudflared, verify 4 connections registered in logs
+- [x] Get tunnel token (`cloudflared tunnel token oryx`)
+- [x] Paste tunnel token into `infra/.env`
+- [x] Start cloudflared, verify 4 connections registered in logs
 
 **Cloudflare Access (one.dash.cloudflare.com):**
-- [ ] Add self-hosted application for each subdomain (6 total)
-- [ ] Set policy: allow your email via Google/GitHub OAuth
-- [ ] Test from mobile data — all subdomains should hit the CF Access login
+- [x] Add self-hosted application for each subdomain (6 total)
+- [x] Set policy: allow your email via Google/GitHub OAuth
+- [x] Test from mobile data — all subdomains should hit the CF Access login
 
 ---
 
