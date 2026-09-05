@@ -69,26 +69,6 @@ pages:
             autofocus: true
             search-engine: https://search.brave.com/search?q={QUERY}
 
-          - type: monitor
-            title: Services
-            cache: 1m
-            sites:
-              - title: Notes
-                url: https://notes.aritra.fyi
-                icon: si:affine
-              - title: Drive
-                url: https://drive.aritra.fyi
-                icon: si:nextcloud
-              - title: Photos
-                url: https://photos.aritra.fyi
-                icon: si:immich
-              - title: Grafana
-                url: https://grafana.aritra.fyi
-                icon: si:grafana
-              - title: Status
-                url: https://status.aritra.fyi
-                icon: si:uptimekuma
-
           - type: markets
             title: Indices & Stocks
             markets:
@@ -157,6 +137,26 @@ pages:
                 label: Berlin
               - timezone: Asia/Kolkata
                 label: Kolkata
+
+          - type: monitor
+            title: Services
+            cache: 1m
+            sites:
+              - title: Notes
+                url: https://notes.aritra.fyi
+                icon: si:affine
+              - title: Drive
+                url: https://drive.aritra.fyi
+                icon: si:nextcloud
+              - title: Photos
+                url: https://photos.aritra.fyi
+                icon: si:immich
+              - title: Grafana
+                url: https://grafana.aritra.fyi
+                icon: si:grafana
+              - title: Status
+                url: https://status.aritra.fyi
+                icon: si:uptimekuma
 
           - type: weather
             location: Bonn, Germany
