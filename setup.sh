@@ -97,6 +97,8 @@ else
   sudo ufw default deny incoming
   sudo ufw default allow outgoing
   sudo ufw allow ssh
+  # Allow Docker networks to reach host services (node-exporter for Prometheus)
+  sudo ufw allow from 172.16.0.0/12 to any port 9100 comment 'Prometheus scrape node-exporter'
   sudo ufw --force enable
   ok "UFW enabled — SSH allowed, everything else blocked"
 fi
