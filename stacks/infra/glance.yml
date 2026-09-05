@@ -56,10 +56,10 @@ pages:
               - title: Internal (Tailscale)
                 links:
                   - title: Portainer
-                    url: http://TAILSCALE-IP:9000
+                    url: http://100.106.157.117:9000
                     icon: si:portainer
                   - title: Pi-hole
-                    url: http://TAILSCALE-IP:8053/admin
+                    url: http://100.106.157.117:8053/admin
                     icon: si:pihole
 
           - type: markets
@@ -104,7 +104,17 @@ pages:
                 label: Kolkata
 
           - type: weather
-            location: Berlin, Germany   # update to your city
+            location: Bonn, Germany
+            units: metric
+            hour-format: 24h
+
+          - type: weather
+            location: Ljubljana, Slovenia
+            units: metric
+            hour-format: 24h
+
+          - type: weather
+            location: Kolkata, India
             units: metric
             hour-format: 24h
 
