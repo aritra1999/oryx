@@ -36,6 +36,9 @@ services:
       - "8080:8080"
     environment:
       PIHOLE_PASSWORD: ${PIHOLE_PASSWORD}
+      IMMICH_API_KEY: ${IMMICH_API_KEY}
+      NEXTCLOUD_APP_TOKEN: ${NEXTCLOUD_APP_TOKEN}
+      NEXTCLOUD_ADMIN_USER: ${NEXTCLOUD_ADMIN_USER}
     volumes:
       - /opt/glance:/app/assets
       - ./config:/app/config
