@@ -165,11 +165,9 @@ Detailed commands for every step are in [`docs/setup.md`](setup.md).
 - [ ] Create disk full alert (> 82%)
 - [ ] Create container down alert
 
-**Uptime Kuma (`server-ts-ip:3002`):**
 - [ ] Create admin account
 - [ ] Add HTTP monitors for all 6 public subdomains (interval: 60s)
 - [ ] Add Discord notification, assign to all monitors
-- [ ] Create public status page (`status.aritra.fyi`)
 
 ---
 
@@ -191,7 +189,7 @@ Detailed commands for every step are in [`docs/setup.md`](setup.md).
 - [ ] Pi-hole blocking ads on home network
 - [ ] Grafana shows live CPU/RAM/disk metrics
 - [ ] Discord test alert fires and is received
-- [ ] Uptime Kuma shows all monitors green
+- [ ] Grafana Blackbox dashboard shows all services green
 - [ ] Plug in external drive, run `check-mount.sh`, confirm backup scripts work
 
 ---

@@ -65,9 +65,6 @@ pages:
               - title: Grafana
                 url: https://grafana.aritra.fyi
                 icon: si:grafana
-              - title: Status
-                url: https://status.aritra.fyi
-                icon: si:uptimekuma
 
           - type: bookmarks
             title: Admin

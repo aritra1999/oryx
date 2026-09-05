@@ -17,8 +17,5 @@ ingress:
   - hostname: grafana.aritra.fyi
     service: http://grafana:3001
 
-  - hostname: status.aritra.fyi
-    service: http://uptime-kuma:3002
-
   # catch-all
   - service: http_status:404

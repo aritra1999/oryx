@@ -37,7 +37,7 @@ cd ~/stacks/media && docker compose pull && docker compose up -d
 
 ## 1. A service is down or not responding
 
-**Symptom:** A subdomain returns an error, or Uptime Kuma fires a Discord alert.
+**Symptom:** A subdomain returns an error, or Grafana fires a Discord alert.
 
 ```bash
 # 1. Which container is the problem?
@@ -602,7 +602,6 @@ When something goes wrong and you're in India / another country:
    - If both fail: server is likely off or internet at home is down — ask someone to check physically
 
 2. **Is it one service or everything?**
-   - Check Uptime Kuma status page: https://status.aritra.fyi
    - One service down → likely a container crash (section 1)
    - Everything down → power or network issue (section 2)
 

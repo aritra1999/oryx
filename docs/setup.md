@@ -101,7 +101,7 @@ sudo mkdir -p \
   /opt/cloudflared \
   /opt/glance \
   /opt/portainer \
-  /opt/monitoring/prometheus /opt/monitoring/grafana /opt/monitoring/uptime-kuma \
+  /opt/monitoring/prometheus /opt/monitoring/grafana \
   /opt/docker
 
 # SATA SSD (app data under /mnt/ssd/)
@@ -259,7 +259,6 @@ pages:
               - title: Monitoring
                 links:
                   - { title: Grafana, url: "https://grafana.aritra.fyi" }
-                  - { title: Status, url: "https://status.aritra.fyi" }
 ```
 
 ```bash
@@ -394,8 +393,6 @@ ingress:
     service: http://localhost:8096
   - hostname: grafana.aritra.fyi
     service: http://localhost:3001
-  - hostname: status.aritra.fyi
-    service: http://localhost:3002
   - service: http_status:404
 EOF
 
@@ -610,17 +607,6 @@ services:
     restart: unless-stopped
     networks:
       - server-net
-
-  uptime-kuma:
-    image: louislam/uptime-kuma:1
-    container_name: uptime-kuma
-    ports:
-      - "3002:3001"
-    volumes:
-      - /opt/monitoring/uptime-kuma:/app/data
-    restart: unless-stopped
-    networks:
-      - server-net
 ```
 
 ```bash
@@ -635,7 +621,6 @@ docker compose up -d
 4. Alerting → Contact Points → Add Discord webhook → test it
 5. Create alert rules for CPU > 85%, RAM > 88%, disk > 82%, container down
 
-**Uptime Kuma setup** (http://localhost:3002):
 1. Add HTTP monitors for all 7 public subdomains, interval 60s
 2. Add Discord notification to all monitors
 3. Create public status page
@@ -726,7 +711,6 @@ done
 | Nextcloud | https://drive.aritra.fyi | 8081 |
 | Immich | https://photos.aritra.fyi | 2283 |
 | Grafana | https://grafana.aritra.fyi | 3001 |
-| Uptime Kuma | https://status.aritra.fyi | 3002 |
 | Pi-hole admin | http://server-ts-ip:8053/admin | 8053 |
 | SSH | ssh aritra@server-ts-ip | 22 |
 | PostgreSQL (dev) | server-ts-ip | 5432 |

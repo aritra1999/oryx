@@ -25,7 +25,7 @@ Home server running on a Dell Optiplex 7060 Micro.
 │  OS + swap   │  Services pool                                     │
 │  ~35 GB      │  ~220 GB  (grows with containers)                  │
 │  Ubuntu LTS  │  Docker · Pi-hole · Glance · Portainer             │
-│              │  Grafana · Prometheus · Uptime Kuma · Tailscale    │
+│              │  Grafana · Prometheus · Blackbox Exporter · Tailscale    │
 └──────────────┴────────────────────────────────────────────────────┘
 
 1 TB SATA SSD  (2.5" internal bay · app data)
@@ -52,7 +52,6 @@ Hardware: i5-8500T · 6 cores · 16 GB RAM
 | AFFiNE | 2 GB | 1 core | 64 GB (`/mnt/ssd/affine/`) |
 | Nextcloud | 1 GB | 1 core | 128 GB (`/mnt/ssd/nextcloud/`) |
 | Grafana | ~250 MB | 0.2 | ~2 GB (NVMe) |
-| Uptime Kuma | ~150 MB | 0.1 | ~1 GB (NVMe) |
 
 ### Infrastructure (always-on)
 
@@ -97,7 +96,6 @@ Hardware: i5-8500T · 6 cores · 16 GB RAM
 | Nextcloud | https://drive.aritra.fyi | Cloudflare Access |
 | Immich | https://photos.aritra.fyi | Cloudflare Access |
 | Grafana | https://grafana.aritra.fyi | Cloudflare Access |
-| Uptime Kuma | https://status.aritra.fyi | Cloudflare Access |
 | Pi-hole admin | `server-ts-ip:8053` | Tailscale only |
 | Portainer | `server-ts-ip:9000` | Tailscale only |
 | SSH | `ssh aritra@server-ts-ip` | Tailscale only |
@@ -113,6 +111,6 @@ Hardware: i5-8500T · 6 cores · 16 GB RAM
   infra/          Pi-hole · cloudflared · Watchtower · Glance · Portainer
   media/          Immich
   productivity/   AFFiNE · Nextcloud
-  monitoring/     Prometheus · Node Exporter · cAdvisor · Grafana · Uptime Kuma
+  monitoring/     Prometheus · Node Exporter · cAdvisor · Grafana · Blackbox Exporter
   dev/            PostgreSQL · Elasticsearch  (on-demand)
 ```
