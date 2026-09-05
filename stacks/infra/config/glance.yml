@@ -196,3 +196,8 @@ pages:
             title: All Containers
             hide-by-default: false
             running-only: false
+
+          - type: iframe
+            title: Uptime & Response Times
+            source: http://192.168.2.100:3001/d/blackbox/blackbox-exporter?orgId=1&refresh=1m&kiosk
+            height: 600
