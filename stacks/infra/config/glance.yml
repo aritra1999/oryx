@@ -26,12 +26,6 @@ pages:
                   "/boot/efi":
                     hide: true
 
-          - type: dns-stats
-            title: Pi-hole
-            service: pihole
-            url: http://192.168.2.100:8053
-            password: ${PIHOLE_PASSWORD}
-
           - type: custom-api
             title: Photos
             cache: 1h
@@ -52,30 +46,6 @@ pages:
                 <div>
                   <div class="color-highlight size-h3">{{ div (.JSON.Int "usage" | toFloat) 1073741824 | toInt | formatNumber }}GB</div>
                   <div class="size-h6">STORAGE</div>
-                </div>
-              </div>
-
-          - type: custom-api
-            title: Drive
-            cache: 1h
-            url: http://nextcloud/ocs/v2.php/cloud/users/${NEXTCLOUD_ADMIN_USER}?format=json
-            headers:
-              OCS-APIREQUEST: "true"
-              Authorization: Basic ${NEXTCLOUD_BASIC_AUTH}
-              Accept: application/json
-            template: |
-              <div class="flex justify-between text-center">
-                <div>
-                  <div class="color-highlight size-h3">{{ div (.JSON.Int "ocs.data.quota.used" | toFloat) 1073741824 | toInt | formatNumber }}GB</div>
-                  <div class="size-h6">USED</div>
-                </div>
-                <div>
-                  <div class="color-highlight size-h3">{{ div (.JSON.Int "ocs.data.quota.free" | toFloat) 1073741824 | toInt | formatNumber }}GB</div>
-                  <div class="size-h6">FREE</div>
-                </div>
-                <div>
-                  <div class="color-highlight size-h3">{{ .JSON.String "ocs.data.quota.relative" }}%</div>
-                  <div class="size-h6">FULL</div>
                 </div>
               </div>
 
@@ -222,12 +192,6 @@ pages:
                     name: SSD
                   "/boot/efi":
                     hide: true
-
-          - type: dns-stats
-            title: Pi-hole
-            service: pihole
-            url: http://192.168.2.100:8053
-            password: ${PIHOLE_PASSWORD}
 
       - size: full
         widgets:
