@@ -18,9 +18,13 @@ pages:
             servers:
               - type: local
                 name: oryx
-                disk-paths:
-                  - /
-                  - /mnt/ssd
+                mountpoints:
+                  "/":
+                    name: NVMe
+                  "/mnt/ssd":
+                    name: SSD
+                  "/boot/efi":
+                    hide: true
 
           - type: docker-containers
             title: Containers

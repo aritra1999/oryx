@@ -38,6 +38,7 @@ services:
       - /opt/glance:/app/assets
       - ./config:/app/config
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /mnt/ssd:/mnt/ssd:ro
     restart: unless-stopped
     networks:
       - server-net
