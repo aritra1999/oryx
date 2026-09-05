@@ -9,7 +9,7 @@ pages:
   - name: Home
     columns:
 
-      # ── Left sidebar — system, DNS, containers, admin ─────────────────────
+      # ── Left sidebar — system, DNS, admin ────────────────────────────────
       - size: small
         widgets:
 
@@ -34,7 +34,7 @@ pages:
 
           - type: docker-containers
             title: Containers
-            hide-by-default: false
+            running-only: true
 
           - type: bookmarks
             title: Admin
@@ -60,19 +60,19 @@ pages:
             title: Services
             cache: 1m
             sites:
-              - title: AFFiNE
+              - title: Notes
                 url: https://notes.aritra.fyi
-                icon: si:affinities
-              - title: Nextcloud
+                icon: si:affine
+              - title: Drive
                 url: https://drive.aritra.fyi
                 icon: si:nextcloud
-              - title: Immich
+              - title: Photos
                 url: https://photos.aritra.fyi
                 icon: si:immich
               - title: Grafana
                 url: https://grafana.aritra.fyi
                 icon: si:grafana
-              - title: Uptime Kuma
+              - title: Status
                 url: https://status.aritra.fyi
                 icon: si:uptimekuma
 
@@ -90,20 +90,48 @@ pages:
               - symbol: EURINR=X
                 name: EUR / INR
 
-          - type: rss
-            title: Tech News
-            style: detailed-list
-            limit: 24
-            collapse-after: 8
-            feeds:
-              - url: https://feeds.arstechnica.com/arstechnica/technology-lab
-                title: Ars Technica
-              - url: https://www.theverge.com/rss/index.xml
-                title: The Verge
-              - url: https://news.ycombinator.com/rss
-                title: Hacker News
-              - url: https://techcrunch.com/feed/
-                title: TechCrunch
+          - type: group
+            widgets:
+              - type: rss
+                title: Tech
+                style: detailed-list
+                limit: 20
+                collapse-after: 8
+                feeds:
+                  - url: https://feeds.arstechnica.com/arstechnica/technology-lab
+                    title: Ars Technica
+                  - url: https://www.theverge.com/rss/index.xml
+                    title: The Verge
+                  - url: https://news.ycombinator.com/rss
+                    title: Hacker News
+                  - url: https://techcrunch.com/feed/
+                    title: TechCrunch
+
+              - type: rss
+                title: World
+                style: detailed-list
+                limit: 20
+                collapse-after: 8
+                feeds:
+                  - url: http://feeds.bbci.co.uk/news/world/rss.xml
+                    title: BBC World
+                  - url: https://feeds.skynews.com/feeds/rss/world.xml
+                    title: Sky News
+                  - url: https://rss.dw.com/rdf/rss-en-world
+                    title: Deutsche Welle
+
+              - type: rss
+                title: Finance
+                style: detailed-list
+                limit: 20
+                collapse-after: 8
+                feeds:
+                  - url: https://feeds.bloomberg.com/markets/news.rss
+                    title: Bloomberg
+                  - url: https://feeds.a.dj.com/rss/RSSMarketsMain.xml
+                    title: Wall Street Journal
+                  - url: https://www.ft.com/rss/home/uk
+                    title: Financial Times
 
       # ── Right sidebar — time, weather, calendar ───────────────────────────
       - size: small
@@ -133,3 +161,33 @@ pages:
             hour-format: 24h
 
           - type: calendar
+
+  # ── System page ────────────────────────────────────────────────────────────
+  - name: System
+    columns:
+      - size: small
+        widgets:
+          - type: server-stats
+            title: System
+            servers:
+              - type: local
+                name: oryx
+                mountpoints:
+                  "/":
+                    name: NVMe
+                  "/mnt/ssd":
+                    name: SSD
+                  "/boot/efi":
+                    hide: true
+
+          - type: dns-stats
+            title: Pi-hole
+            service: pihole
+            url: http://192.168.2.100:8053
+            password: ${PIHOLE_PASSWORD}
+
+      - size: full
+        widgets:
+          - type: docker-containers
+            title: All Containers
+            hide-by-default: false
