@@ -133,19 +133,19 @@ Detailed commands for every step are in [`docs/setup.md`](setup.md).
 
 ## Media stack (Immich only)
 
-- [ ] Fill in `~/stacks/media/.env`
-- [ ] Start media stack
-- [ ] Verify Immich is running (`server-ts-ip:2283`)
+- [x] Fill in `~/stacks/media/.env`
+- [x] Start media stack
+- [x] Verify Immich is running (`server-ts-ip:2283`)
 
 ---
 
 ## Productivity stack
 
-- [ ] Fill in `~/stacks/productivity/.env`
-- [ ] Create `init-db.sh`
-- [ ] Start productivity stack
-- [ ] Verify AFFiNE loads (`server-ts-ip:3000`)
-- [ ] Verify Nextcloud loads (`server-ts-ip:8081`)
+- [x] Fill in `~/stacks/productivity/.env`
+- [x] Create `init-db.sh`
+- [x] Start productivity stack
+- [x] Verify AFFiNE loads (`notes.aritra.fyi`)
+- [x] Verify Nextcloud loads (`drive.aritra.fyi`)
 
 ---
 
