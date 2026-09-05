@@ -6,10 +6,10 @@ ingress:
     service: http://glance:8080
 
   - hostname: notes.aritra.fyi
-    service: http://affine:3000
+    service: http://affine:3010
 
   - hostname: drive.aritra.fyi
-    service: http://nextcloud:8081
+    service: http://nextcloud:80
 
   - hostname: photos.aritra.fyi
     service: http://immich-server:2283
