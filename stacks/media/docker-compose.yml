@@ -42,7 +42,7 @@ services:
       - server-net
 
   immich-postgres:
-    image: tensorchord/pgvecto-rs:pg16-v0.2.0
+    image: pgvector/pgvector:pg16
     container_name: immich-postgres
     environment:
       POSTGRES_USER: ${IMMICH_DB_USER}
@@ -51,11 +51,6 @@ services:
       POSTGRES_INITDB_ARGS: '--data-checksums'
     volumes:
       - /mnt/ssd/immich/postgres:/var/lib/postgresql/data
-    command: >-
-      postgres
-      -c shared_preload_libraries=vectors.so
-      -c 'search_path="$$user", public, vectors'
-      -c shared_buffers=512MB
     restart: unless-stopped
     networks:
       - server-net
