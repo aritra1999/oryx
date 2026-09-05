@@ -61,39 +61,39 @@ Detailed commands for every step are in [`docs/setup.md`](setup.md).
 
 ## Optiplex — Initial system setup
 
-- [ ] SSH in from laptop, copy SSH public key
-- [ ] Disable password auth in SSH config
-- [ ] Verify key-only login works before proceeding
-- [ ] Enable UFW — allow SSH, deny everything else
-- [ ] Enable automatic security updates
-- [ ] Set static LAN IP (`192.168.1.100`) via Netplan
+- [x] SSH in from laptop, copy SSH public key
+- [x] Disable password auth in SSH config
+- [x] Verify key-only login works before proceeding
+- [x] Enable UFW — allow SSH, deny everything else
+- [x] Enable automatic security updates
+- [x] Set static LAN IP (`192.168.2.100`) via Netplan
 - [ ] Reserve IP in router DHCP settings
 
 ---
 
 ## Optiplex — Storage
 
-- [ ] Identify SATA SSD device name (`lsblk`)
-- [ ] Format 1 TB SATA SSD as ext4, mount at `/mnt/ssd`, add to `/etc/fstab` with `nofail`
-- [ ] Create all `/opt/` and `/mnt/ssd/` service directories
+- [x] Identify SATA SSD device name (`lsblk`)
+- [x] Format 1 TB SATA SSD as ext4, mount at `/mnt/ssd`, add to `/etc/fstab` with `nofail`
+- [x] Create all `/opt/` and `/mnt/ssd/` service directories
 
 ---
 
 ## Docker
 
-- [ ] Install Docker
-- [ ] Add `aritra` to docker group, log out and back in
-- [ ] Configure Docker data-root → NVMe (`/opt/docker`)
+- [x] Install Docker
+- [x] Add `aritra` to docker group, log out and back in
+- [x] Configure Docker data-root → NVMe (`/opt/docker`)
 - [ ] Create shared Docker network (`server-net`)
-- [ ] Clone oryx repo to `~/oryx`
-- [ ] Create `~/stacks/{infra,media,productivity,monitoring,dev}`
+- [x] Clone oryx repo to `~/oryx`
+- [x] Create `~/stacks/{infra,media,productivity,monitoring,dev}`
 
 ---
 
 ## Tailscale
 
-- [ ] Install Tailscale
-- [ ] `tailscale up --ssh`, authorize via URL
+- [x] Install Tailscale
+- [x] `tailscale up --ssh`, authorize via URL
 - [ ] Note Tailscale IP, test SSH from laptop over Tailscale
 - [ ] Set node key to never expire in Tailscale admin console
 
@@ -105,7 +105,7 @@ Detailed commands for every step are in [`docs/setup.md`](setup.md).
 - [ ] Create `docker-compose.yml` for infra stack
 - [ ] Create `/opt/glance/glance.yml`
 - [ ] Start Pi-hole, Glance, Watchtower, Portainer
-- [ ] Set router primary DNS to `192.168.1.100`
+- [ ] Set router primary DNS to `192.168.2.100`
 - [ ] Verify Pi-hole admin loads (`server-ts-ip:8053`)
 - [ ] Verify Glance loads (`server-ts-ip:8080`)
 - [ ] Verify Portainer loads (`server-ts-ip:9000`), create admin account
@@ -115,14 +115,12 @@ Detailed commands for every step are in [`docs/setup.md`](setup.md).
 
 ## Cloudflare Tunnel
 
-**On laptop:**
-- [ ] Install cloudflared
-- [ ] `cloudflared tunnel login`
-- [ ] `cloudflared tunnel create oryx`
-- [ ] Create DNS routes for all 6 subdomains (`home`, `affine`, `drive`, `photos`, `grafana`, `status`)
-- [ ] Copy tunnel token
-
 **On server:**
+- [x] Install cloudflared
+- [x] `cloudflared tunnel login`
+- [x] `cloudflared tunnel create oryx`
+- [x] Create DNS routes for all 6 subdomains (`home`, `notes`, `drive`, `photos`, `grafana`, `status`)
+- [ ] Get tunnel token (`cloudflared tunnel token oryx`)
 - [ ] Paste tunnel token into `infra/.env`
 - [ ] Start cloudflared, verify 4 connections registered in logs
 
