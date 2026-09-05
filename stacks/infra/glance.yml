@@ -1,0 +1,111 @@
+server:
+  port: 8080
+
+theme:
+  background-color: 240 10 5
+  primary-color: 217 92 83
+
+pages:
+  - name: Home
+    columns:
+
+      # ── Left sidebar — system & services ─────────────────────────────────
+      - size: small
+        widgets:
+
+          - type: server-stats
+            title: System
+            servers:
+              - type: local
+                name: oryx
+
+          - type: docker-containers
+            title: Containers
+            hide-by-default: false
+
+      # ── Main column — apps, markets, news ────────────────────────────────
+      - size: full
+        widgets:
+
+          - type: search
+            autofocus: true
+
+          - type: monitor
+            title: Services
+            cache: 1m
+            sites:
+              - title: AFFiNE
+                url: https://notes.aritra.fyi
+                icon: si:affinities
+              - title: Nextcloud
+                url: https://drive.aritra.fyi
+                icon: si:nextcloud
+              - title: Immich
+                url: https://photos.aritra.fyi
+                icon: si:immich
+              - title: Grafana
+                url: https://grafana.aritra.fyi
+                icon: si:grafana
+              - title: Uptime Kuma
+                url: https://status.aritra.fyi
+                icon: si:uptimekuma
+
+          - type: bookmarks
+            title: Admin
+            groups:
+              - title: Internal (Tailscale)
+                links:
+                  - title: Portainer
+                    url: http://TAILSCALE-IP:9000
+                    icon: si:portainer
+                  - title: Pi-hole
+                    url: http://TAILSCALE-IP:8053/admin
+                    icon: si:pihole
+
+          - type: markets
+            title: Markets
+            markets:
+              - symbol: SAP
+                name: SAP SE
+              - symbol: "^GSPC"
+                name: S&P 500
+              - symbol: "^NSEI"
+                name: Nifty 50
+              - symbol: "^GDAXI"
+                name: DAX 40
+              - symbol: EURINR=X
+                name: EUR / INR
+
+          - type: rss
+            title: Tech News
+            style: horizontal-cards
+            limit: 24
+            collapse-after: 8
+            feeds:
+              - url: https://feeds.arstechnica.com/arstechnica/technology-lab
+                title: Ars Technica
+              - url: https://www.theverge.com/rss/index.xml
+                title: The Verge
+              - url: https://news.ycombinator.com/rss
+                title: Hacker News
+              - url: https://techcrunch.com/feed/
+                title: TechCrunch
+
+      # ── Right sidebar — time, weather, calendar ───────────────────────────
+      - size: small
+        widgets:
+
+          - type: clock
+            hour-format: 24h
+            timezones:
+              - timezone: Europe/Berlin
+                label: Berlin
+              - timezone: Asia/Kolkata
+                label: Kolkata
+
+          - type: weather
+            location: Berlin, Germany   # update to your city
+            units: metric
+            hour-format: 24h
+
+          - type: calendar
