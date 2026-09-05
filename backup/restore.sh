@@ -136,6 +136,14 @@ section "Restore: ${BACKUP_ID}"
 echo -e "  Component:  ${BOLD}${COMPONENT}${NC}"
 echo -e "  Source:     ${RESTORE_DIR}"
 
+# Check required tools
+for _cmd in docker rsync; do
+  if ! command -v "${_cmd}" &>/dev/null; then
+    fail "${_cmd} not found. Install it: sudo apt-get install -y ${_cmd}"
+  fi
+done
+unset _cmd
+
 # Show manifest if it exists
 if [[ -f "${RESTORE_DIR}/manifest.txt" ]]; then
   echo

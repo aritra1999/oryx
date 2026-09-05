@@ -44,6 +44,32 @@ fi
 ok "Running as $(whoami)"
 REAL_HOME=$(eval echo "~$(whoami)")
 
+# ── Phase 0: Required packages ───────────────────────────────────────────────
+section "Phase 0 — Required packages"
+
+declare -A _DEPS=(
+  [ufw]=ufw
+  [parted]=parted
+  [mkfs.ext4]=e2fsprogs
+  [curl]=curl
+)
+_MISSING=()
+
+for _cmd in "${!_DEPS[@]}"; do
+  command -v "${_cmd}" &>/dev/null || _MISSING+=("${_DEPS[$_cmd]}")
+done
+
+if [[ ${#_MISSING[@]} -gt 0 ]]; then
+  info "Installing missing packages: ${_MISSING[*]}"
+  sudo apt-get update -qq
+  sudo apt-get install -y "${_MISSING[@]}"
+  ok "Installed: ${_MISSING[*]}"
+else
+  skip "All required packages present"
+fi
+
+unset _DEPS _MISSING _cmd
+
 # ── Phase 1: SSH hardening ────────────────────────────────────────────────────
 section "Phase 1 — SSH hardening"
 

@@ -22,6 +22,13 @@ info()    { echo -e "  ${BLUE}→${NC}  $*"; }
 warn()    { echo -e "  ${YELLOW}⚠${NC}  $*"; }
 section() { echo; echo -e "${BOLD}$*${NC}"; echo "────────────────────────────────────────"; }
 
+# ── Dependency check ─────────────────────────────────────────────────────────
+if ! command -v docker &>/dev/null; then
+  echo -e "  ${RED}✗${NC}  docker not found. Install it first:" >&2
+  echo "      curl -fsSL https://get.docker.com | sudo sh" >&2
+  exit 1
+fi
+
 # ── List mode ─────────────────────────────────────────────────────────────────
 if [[ "${1:-}" == "--list" ]]; then
   section "Running containers"

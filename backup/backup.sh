@@ -110,6 +110,11 @@ if ! docker info &>/dev/null; then
   fail "Docker is not running. Start Docker first."
 fi
 
+# Check rsync
+if ! command -v rsync &>/dev/null; then
+  fail "rsync not found. Install it: sudo apt-get install -y rsync"
+fi
+
 if [[ "${DRY_RUN}" == true ]]; then
   warn "DRY RUN — no files will be written"
 fi
