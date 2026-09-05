@@ -64,6 +64,7 @@ services:
       WATCHTOWER_SCHEDULE: "0 0 3 * * *"   # 3am nightly
       WATCHTOWER_CLEANUP: "true"
       TZ: ${TZ}
+      DOCKER_API_VERSION: "1.40"
     restart: unless-stopped
     networks:
       - server-net
