@@ -40,6 +40,8 @@ services:
     image: ghcr.io/toeverything/affine:stable
     container_name: affine_migration
     command: ['sh', '-c', 'node ./scripts/self-host-predeploy.js']
+    labels:
+      glance.hide: "true"
     volumes:
       - /mnt/ssd/affine/data:/root/.affine/storage
       - /mnt/ssd/affine/config:/root/.affine/config
@@ -94,7 +96,7 @@ services:
       REDIS_HOST: prod-redis
       NEXTCLOUD_ADMIN_USER: ${NEXTCLOUD_ADMIN_USER}
       NEXTCLOUD_ADMIN_PASSWORD: ${NEXTCLOUD_ADMIN_PASSWORD}
-      NEXTCLOUD_TRUSTED_DOMAINS: "${NEXTCLOUD_DOMAIN} localhost"
+      NEXTCLOUD_TRUSTED_DOMAINS: "${NEXTCLOUD_DOMAIN} localhost nextcloud"
       OVERWRITEPROTOCOL: https
       OVERWRITECLIURL: https://${NEXTCLOUD_DOMAIN}
     depends_on:
