@@ -2,7 +2,7 @@
 
 **Hardware:** Dell Optiplex 7060 Micro · i5-8500T · 16 GB RAM  
 **Drives:** 256 GB NVMe (boot + services) · 1 TB SATA SSD (internal 2.5" bay, app data)  
-**Domain:** aritra.bio (Cloudflare)
+**Domain:** aritra.fyi (Cloudflare)
 
 For the full implementation plan with checkboxes see:
 `docs/superpowers/plans/2026-09-02-home-server.md`
@@ -15,7 +15,7 @@ For the full implementation plan with checkboxes see:
 - [ ] 1 TB SATA SSD installed in the internal 2.5" bay
   (the NVMe is already installed — this is the data drive)
 - [ ] Ubuntu 26.04 LTS Server ISO flashed to USB
-- [ ] A Cloudflare account with `aritra.bio` already managed there
+- [ ] A Cloudflare account with `aritra.fyi` already managed there
 - [ ] A Discord server with a webhook URL for alerts
 - [ ] Your SSH public key ready (`~/.ssh/id_ed25519.pub` on your laptop)
 - [ ] All passwords/secrets stored in a password manager **before** you start
@@ -251,15 +251,15 @@ pages:
             groups:
               - title: Media
                 links:
-                  - { title: Immich, url: "https://photos.aritra.bio" }
+                  - { title: Immich, url: "https://photos.aritra.fyi" }
               - title: Productivity
                 links:
-                  - { title: AFFiNE, url: "https://affine.aritra.bio" }
-                  - { title: Nextcloud, url: "https://drive.aritra.bio" }
+                  - { title: AFFiNE, url: "https://notes.aritra.fyi" }
+                  - { title: Nextcloud, url: "https://drive.aritra.fyi" }
               - title: Monitoring
                 links:
-                  - { title: Grafana, url: "https://grafana.aritra.bio" }
-                  - { title: Status, url: "https://status.aritra.bio" }
+                  - { title: Grafana, url: "https://grafana.aritra.fyi" }
+                  - { title: Status, url: "https://status.aritra.fyi" }
 ```
 
 ```bash
@@ -362,7 +362,7 @@ cloudflared tunnel create oryx   # note the tunnel ID
 
 # Create DNS records for all subdomains
 for sub in home affine drive photos media grafana status; do
-  cloudflared tunnel route dns oryx ${sub}.aritra.bio
+  cloudflared tunnel route dns oryx ${sub}.aritra.fyi
 done
 
 # Get the token to paste into the server
@@ -382,19 +382,19 @@ tunnel: <your-tunnel-id>
 credentials-file: /etc/cloudflared/<tunnel-id>.json
 
 ingress:
-  - hostname: home.aritra.bio
+  - hostname: home.aritra.fyi
     service: http://localhost:8080
-  - hostname: affine.aritra.bio
+  - hostname: notes.aritra.fyi
     service: http://localhost:3000
-  - hostname: drive.aritra.bio
+  - hostname: drive.aritra.fyi
     service: http://localhost:8081
-  - hostname: photos.aritra.bio
+  - hostname: photos.aritra.fyi
     service: http://localhost:2283
-  - hostname: media.aritra.bio
+  - hostname: media.aritra.fyi
     service: http://localhost:8096
-  - hostname: grafana.aritra.bio
+  - hostname: grafana.aritra.fyi
     service: http://localhost:3001
-  - hostname: status.aritra.bio
+  - hostname: status.aritra.fyi
     service: http://localhost:3002
   - service: http_status:404
 EOF
@@ -498,9 +498,9 @@ services:
       REDIS_HOST: redis
       NEXTCLOUD_ADMIN_USER: ${NEXTCLOUD_ADMIN_USER}
       NEXTCLOUD_ADMIN_PASSWORD: ${NEXTCLOUD_ADMIN_PASSWORD}
-      NEXTCLOUD_TRUSTED_DOMAINS: "drive.aritra.bio localhost"
+      NEXTCLOUD_TRUSTED_DOMAINS: "drive.aritra.fyi localhost"
       OVERWRITEPROTOCOL: https
-      OVERWRITECLIURL: https://drive.aritra.bio
+      OVERWRITECLIURL: https://drive.aritra.fyi
     depends_on: [postgres, redis]
     restart: unless-stopped
     networks:
@@ -606,7 +606,7 @@ services:
     environment:
       GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
       GF_USERS_ALLOW_SIGN_UP: "false"
-      GF_SERVER_ROOT_URL: https://grafana.aritra.bio
+      GF_SERVER_ROOT_URL: https://grafana.aritra.fyi
     restart: unless-stopped
     networks:
       - server-net
@@ -710,8 +710,8 @@ nslookup doubleclick.net 192.168.1.100   # should return 0.0.0.0
 
 # All public subdomains (run from mobile data / different network)
 for sub in home affine drive photos media grafana status; do
-  echo -n "${sub}.aritra.bio: "
-  curl -sI https://${sub}.aritra.bio | head -1
+  echo -n "${sub}.aritra.fyi: "
+  curl -sI https://${sub}.aritra.fyi | head -1
 done
 ```
 
@@ -721,12 +721,12 @@ done
 
 | Service | URL / access | Port |
 |---|---|---|
-| Glance | https://home.aritra.bio | 8080 |
-| AFFiNE | https://affine.aritra.bio | 3000 |
-| Nextcloud | https://drive.aritra.bio | 8081 |
-| Immich | https://photos.aritra.bio | 2283 |
-| Grafana | https://grafana.aritra.bio | 3001 |
-| Uptime Kuma | https://status.aritra.bio | 3002 |
+| Glance | https://home.aritra.fyi | 8080 |
+| AFFiNE | https://notes.aritra.fyi | 3000 |
+| Nextcloud | https://drive.aritra.fyi | 8081 |
+| Immich | https://photos.aritra.fyi | 2283 |
+| Grafana | https://grafana.aritra.fyi | 3001 |
+| Uptime Kuma | https://status.aritra.fyi | 3002 |
 | Pi-hole admin | http://server-ts-ip:8053/admin | 8053 |
 | SSH | ssh aritra@server-ts-ip | 22 |
 | PostgreSQL (dev) | server-ts-ip | 5432 |

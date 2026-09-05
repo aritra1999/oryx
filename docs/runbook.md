@@ -135,12 +135,12 @@ sudo tailscale up   # re-authenticate via the URL it prints
 The Cloudflare Tunnel is still running as long as the server is on. You can SSH through it:
 ```bash
 # On your laptop, create an SSH-over-Cloudflare Tunnel:
-cloudflared access ssh --hostname ssh.aritra.bio
+cloudflared access ssh --hostname ssh.aritra.fyi
 ```
 This requires adding an SSH application in Cloudflare Access first. Set it up proactively:
 - Cloudflare Zero Trust → Access → Applications → Add → Self-hosted
-- Type: SSH, hostname: `ssh.aritra.bio`
-- Then add a DNS route: `cloudflared tunnel route dns oryx ssh.aritra.bio`
+- Type: SSH, hostname: `ssh.aritra.fyi`
+- Then add a DNS route: `cloudflared tunnel route dns oryx ssh.aritra.fyi`
 
 ### Prevention
 In Tailscale admin console (https://login.tailscale.com/admin):
@@ -151,7 +151,7 @@ In Tailscale admin console (https://login.tailscale.com/admin):
 
 ## 4. Cloudflare Tunnel down (public subdomains unreachable)
 
-**Symptom:** All `*.aritra.bio` return errors but Tailscale/LAN works fine.
+**Symptom:** All `*.aritra.fyi` return errors but Tailscale/LAN works fine.
 
 ```bash
 # Check cloudflared container
@@ -598,11 +598,11 @@ When something goes wrong and you're in India / another country:
 
 1. **Can you reach the server?**
    - Try Tailscale first: `tailscale ping <server-ip>`
-   - If Tailscale fails, try SSH over Cloudflare Tunnel: `cloudflared access ssh --hostname ssh.aritra.bio`
+   - If Tailscale fails, try SSH over Cloudflare Tunnel: `cloudflared access ssh --hostname ssh.aritra.fyi`
    - If both fail: server is likely off or internet at home is down — ask someone to check physically
 
 2. **Is it one service or everything?**
-   - Check Uptime Kuma status page: https://status.aritra.bio
+   - Check Uptime Kuma status page: https://status.aritra.fyi
    - One service down → likely a container crash (section 1)
    - Everything down → power or network issue (section 2)
 

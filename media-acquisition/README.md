@@ -1,6 +1,6 @@
 # media-acquisition
 
-On-demand media download stack for the aritra.bio home server.
+On-demand media download stack for the aritra.fyi home server.
 Runs on your **laptop** — not on the home server itself.
 
 Stack: **Prowlarr** (indexers) · **Radarr** (movies) · **Sonarr** (TV) · **qBittorrent** (downloads)

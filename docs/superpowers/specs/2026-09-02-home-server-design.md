@@ -1,4 +1,4 @@
-# Home Server Design — aritra.bio
+# Home Server Design — aritra.fyi
 
 **Date:** 2026-09-02  
 **Hardware:** Dell Optiplex 7060 Micro · i5-8500T · 16 GB DDR4 · 2 drives
@@ -76,13 +76,13 @@
 
 | Service | Subdomain | Port | Drive | Purpose |
 |---|---|---|---|---|
-| Glance | `home.aritra.bio` | 8080 | NVMe | Home dashboard (RSS, weather, GitHub, etc.) |
-| AFFiNE | `affine.aritra.bio` | 3000 | SATA SSD | Self-hosted notes and whiteboards |
-| Nextcloud | `drive.aritra.bio` | 80 | SATA SSD | Google Drive replacement |
-| Immich | `photos.aritra.bio` | 2283 | HDD + NVMe cache | Google Photos replacement |
-| Jellyfin | `media.aritra.bio` | 8096 | HDD + NVMe cache | Media server (movies, TV) with QSV transcode |
-| Grafana | `grafana.aritra.bio` | 3001 | NVMe | Monitoring dashboards |
-| Uptime Kuma | `status.aritra.bio` | 3002 | NVMe | Public status page + uptime monitoring |
+| Glance | `home.aritra.fyi` | 8080 | NVMe | Home dashboard (RSS, weather, GitHub, etc.) |
+| AFFiNE | `notes.aritra.fyi` | 3000 | SATA SSD | Self-hosted notes and whiteboards |
+| Nextcloud | `drive.aritra.fyi` | 80 | SATA SSD | Google Drive replacement |
+| Immich | `photos.aritra.fyi` | 2283 | HDD + NVMe cache | Google Photos replacement |
+| Jellyfin | `media.aritra.fyi` | 8096 | HDD + NVMe cache | Media server (movies, TV) with QSV transcode |
+| Grafana | `grafana.aritra.fyi` | 3001 | NVMe | Monitoring dashboards |
+| Uptime Kuma | `status.aritra.fyi` | 3002 | NVMe | Public status page + uptime monitoring |
 
 ### 5.2 Internal / admin services
 
@@ -158,7 +158,7 @@ Uptime Kuma handles HTTP endpoint probing (see 7.3) — Blackbox Exporter is not
 
 - Checks each public subdomain every 60 s from inside the server
 - Fires Discord notification on down/recovery
-- Hosts public status page at `status.aritra.bio`
+- Hosts public status page at `status.aritra.fyi`
 
 ---
 

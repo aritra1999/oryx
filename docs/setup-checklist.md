@@ -171,7 +171,7 @@ Detailed commands for every step are in [`docs/setup.md`](setup.md).
 - [ ] Create admin account
 - [ ] Add HTTP monitors for all 6 public subdomains (interval: 60s)
 - [ ] Add Discord notification, assign to all monitors
-- [ ] Create public status page (`status.aritra.bio`)
+- [ ] Create public status page (`status.aritra.fyi`)
 
 ---
 

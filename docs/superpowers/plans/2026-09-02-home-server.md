@@ -413,21 +413,21 @@
                 - title: Media
                   links:
                     - title: Jellyfin
-                      url: https://media.aritra.bio
+                      url: https://media.aritra.fyi
                     - title: Immich
-                      url: https://photos.aritra.bio
+                      url: https://photos.aritra.fyi
                 - title: Productivity
                   links:
                     - title: AFFiNE
-                      url: https://affine.aritra.bio
+                      url: https://notes.aritra.fyi
                     - title: Nextcloud
-                      url: https://drive.aritra.bio
+                      url: https://drive.aritra.fyi
                 - title: Monitoring
                   links:
                     - title: Grafana
-                      url: https://grafana.aritra.bio
+                      url: https://grafana.aritra.fyi
                     - title: Status
-                      url: https://status.aritra.bio
+                      url: https://status.aritra.fyi
   EOF
   ```
 - [ ] Start Pi-hole and Glance only (cloudflared needs the token from Task 8):
@@ -483,19 +483,19 @@
   credentials-file: /root/.cloudflared/<tunnel-id>.json
 
   ingress:
-    - hostname: home.aritra.bio
+    - hostname: home.aritra.fyi
       service: http://localhost:8080
-    - hostname: affine.aritra.bio
+    - hostname: notes.aritra.fyi
       service: http://localhost:3000
-    - hostname: drive.aritra.bio
+    - hostname: drive.aritra.fyi
       service: http://localhost:8081
-    - hostname: photos.aritra.bio
+    - hostname: photos.aritra.fyi
       service: http://localhost:2283
-    - hostname: media.aritra.bio
+    - hostname: media.aritra.fyi
       service: http://localhost:8096
-    - hostname: grafana.aritra.bio
+    - hostname: grafana.aritra.fyi
       service: http://localhost:3001
-    - hostname: status.aritra.bio
+    - hostname: status.aritra.fyi
       service: http://localhost:3002
     - service: http_status:404
   EOF
@@ -503,7 +503,7 @@
 - [ ] Create DNS records for all subdomains:
   ```bash
   for sub in home affine drive photos media grafana status; do
-    cloudflared tunnel route dns oryx ${sub}.aritra.bio
+    cloudflared tunnel route dns oryx ${sub}.aritra.fyi
   done
   ```
 - [ ] Generate a tunnel token for the server:
@@ -535,13 +535,13 @@
 - [ ] Go to https://one.dash.cloudflare.com → Access → Applications
 - [ ] Add a self-hosted application for each subdomain (repeat for all 7):
   - Application name: e.g. `Jellyfin`
-  - Application domain: `media.aritra.bio`
+  - Application domain: `media.aritra.fyi`
   - Session duration: `24 hours`
   - Policy: Allow → Emails → add your email address
   - Identity providers: Google (or GitHub)
 - [ ] Verify access from outside your home network (use mobile data):
   ```bash
-  curl -I https://home.aritra.bio
+  curl -I https://home.aritra.fyi
   # Expected: HTTP 302 redirect to Cloudflare Access login
   ```
 - [ ] Complete the OAuth login flow in browser — verify it reaches the Glance dashboard
@@ -600,7 +600,7 @@
         - "110"                 # render group — replace with value from above
       environment:
         TZ: ${TZ}
-        JELLYFIN_PublishedServerUrl: https://media.aritra.bio
+        JELLYFIN_PublishedServerUrl: https://media.aritra.fyi
       restart: unless-stopped
       networks:
         - server-net
@@ -787,9 +787,9 @@
         REDIS_HOST: redis
         NEXTCLOUD_ADMIN_USER: ${NEXTCLOUD_ADMIN_USER}
         NEXTCLOUD_ADMIN_PASSWORD: ${NEXTCLOUD_ADMIN_PASSWORD}
-        NEXTCLOUD_TRUSTED_DOMAINS: drive.aritra.bio localhost
+        NEXTCLOUD_TRUSTED_DOMAINS: drive.aritra.fyi localhost
         OVERWRITEPROTOCOL: https
-        OVERWRITECLIURL: https://drive.aritra.bio
+        OVERWRITECLIURL: https://drive.aritra.fyi
       depends_on:
         - postgres
         - redis
@@ -942,8 +942,8 @@
       environment:
         GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD}
         GF_USERS_ALLOW_SIGN_UP: "false"
-        GF_SERVER_ROOT_URL: https://grafana.aritra.bio
-        GF_SERVER_DOMAIN: grafana.aritra.bio
+        GF_SERVER_ROOT_URL: https://grafana.aritra.fyi
+        GF_SERVER_DOMAIN: grafana.aritra.fyi
       restart: unless-stopped
       networks:
         - server-net
@@ -1033,11 +1033,11 @@
 - [ ] Configure Uptime Kuma:
   - Open http://localhost:3002, create admin account
   - Add monitor for each public subdomain:
-    - Type: HTTP(s), URL: `https://home.aritra.bio`, interval: 60s
+    - Type: HTTP(s), URL: `https://home.aritra.fyi`, interval: 60s
     - Repeat for: `affine.`, `drive.`, `photos.`, `media.`, `grafana.`, `status.`
   - Settings → Notifications → Add Discord webhook
   - Assign webhook to all monitors
-  - Status Page → New status page `aritra.bio Services` → public URL: `status.aritra.bio`
+  - Status Page → New status page `aritra.fyi Services` → public URL: `status.aritra.fyi`
   **Container Down Alert:**
   ```
   Name: Container down
@@ -1333,14 +1333,14 @@ Run after all phases are complete:
 - [ ] All public subdomains reachable (on mobile data, not home WiFi):
   ```bash
   for sub in home affine drive photos media grafana status; do
-    echo -n "${sub}.aritra.bio: "
-    curl -sI https://${sub}.aritra.bio | head -1
+    echo -n "${sub}.aritra.fyi: "
+    curl -sI https://${sub}.aritra.fyi | head -1
   done
   ```
 - [ ] Cloudflare Access blocks unauthenticated access: visit any subdomain in incognito → should see CF login
 - [ ] Grafana dashboards show data for CPU, RAM, disk
 - [ ] Discord alert fires: temporarily set CPU alert threshold to 1% to trigger test, reset after
-- [ ] Uptime Kuma shows all services green at `https://status.aritra.bio`
+- [ ] Uptime Kuma shows all services green at `https://status.aritra.fyi`
 - [ ] Borg backup: `borg list /mnt/nvme/backup/borg` → shows at least one archive
 - [ ] rclone backup: `rclone ls gdrive:homeserver-backup/` → shows directories
 

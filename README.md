@@ -92,12 +92,12 @@ Hardware: i5-8500T · 6 cores · 16 GB RAM
 
 | Service | URL | Access |
 |---|---|---|
-| Glance | https://home.aritra.bio | Cloudflare Access |
-| AFFiNE | https://affine.aritra.bio | Cloudflare Access |
-| Nextcloud | https://drive.aritra.bio | Cloudflare Access |
-| Immich | https://photos.aritra.bio | Cloudflare Access |
-| Grafana | https://grafana.aritra.bio | Cloudflare Access |
-| Uptime Kuma | https://status.aritra.bio | Cloudflare Access |
+| Glance | https://home.aritra.fyi | Cloudflare Access |
+| AFFiNE | https://notes.aritra.fyi | Cloudflare Access |
+| Nextcloud | https://drive.aritra.fyi | Cloudflare Access |
+| Immich | https://photos.aritra.fyi | Cloudflare Access |
+| Grafana | https://grafana.aritra.fyi | Cloudflare Access |
+| Uptime Kuma | https://status.aritra.fyi | Cloudflare Access |
 | Pi-hole admin | `server-ts-ip:8053` | Tailscale only |
 | Portainer | `server-ts-ip:9000` | Tailscale only |
 | SSH | `ssh aritra@server-ts-ip` | Tailscale only |
