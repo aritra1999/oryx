@@ -13,7 +13,7 @@ services:
       - "8053:80/tcp"       # admin UI — access via Tailscale: server-ts-ip:8053
     environment:
       TZ: ${TZ}
-      WEBPASSWORD: ${PIHOLE_PASSWORD}
+      FTLCONF_webserver_api_password: ${PIHOLE_PASSWORD}
     volumes:
       - /opt/pihole/etc:/etc/pihole
       - /opt/pihole/dnsmasq:/etc/dnsmasq.d
