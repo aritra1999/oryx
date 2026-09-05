@@ -9,7 +9,7 @@ pages:
   - name: Home
     columns:
 
-      # ── Left sidebar — system, DNS, admin ────────────────────────────────
+      # ── Left sidebar — system, DNS, stats, admin ─────────────────────────
       - size: small
         widgets:
 
@@ -32,9 +32,52 @@ pages:
             url: http://192.168.2.100:8053
             password: ${PIHOLE_PASSWORD}
 
-          - type: docker-containers
-            title: Containers
-            running-only: true
+          - type: custom-api
+            title: Photos
+            cache: 1h
+            url: http://immich-server:2283/api/server/statistics
+            headers:
+              x-api-key: ${IMMICH_API_KEY}
+              Accept: application/json
+            template: |
+              <div class="flex justify-between text-center">
+                <div>
+                  <div class="color-highlight size-h3">{{ .JSON.Int "photos" | formatNumber }}</div>
+                  <div class="size-h6">PHOTOS</div>
+                </div>
+                <div>
+                  <div class="color-highlight size-h3">{{ .JSON.Int "videos" | formatNumber }}</div>
+                  <div class="size-h6">VIDEOS</div>
+                </div>
+                <div>
+                  <div class="color-highlight size-h3">{{ div (.JSON.Int "usage" | toFloat) 1073741824 | toInt | formatNumber }}GB</div>
+                  <div class="size-h6">STORAGE</div>
+                </div>
+              </div>
+
+          - type: custom-api
+            title: Drive
+            cache: 1h
+            url: http://nextcloud/ocs/v2.php/cloud/users/${NEXTCLOUD_ADMIN_USER}?format=json
+            headers:
+              OCS-APIREQUEST: "true"
+              Authorization: Basic ${NEXTCLOUD_BASIC_AUTH}
+              Accept: application/json
+            template: |
+              <div class="flex justify-between text-center">
+                <div>
+                  <div class="color-highlight size-h3">{{ div (.JSON.Int "ocs.data.quota.used" | toFloat) 1073741824 | toInt | formatNumber }}GB</div>
+                  <div class="size-h6">USED</div>
+                </div>
+                <div>
+                  <div class="color-highlight size-h3">{{ div (.JSON.Int "ocs.data.quota.free" | toFloat) 1073741824 | toInt | formatNumber }}GB</div>
+                  <div class="size-h6">FREE</div>
+                </div>
+                <div>
+                  <div class="color-highlight size-h3">{{ .JSON.String "ocs.data.quota.relative" }}%</div>
+                  <div class="size-h6">FULL</div>
+                </div>
+              </div>
 
           - type: bookmarks
             title: Admin
@@ -186,55 +229,9 @@ pages:
             url: http://192.168.2.100:8053
             password: ${PIHOLE_PASSWORD}
 
-          - type: custom-api
-            title: Immich
-            cache: 1h
-            url: http://immich-server:2283/api/server/statistics
-            headers:
-              x-api-key: ${IMMICH_API_KEY}
-              Accept: application/json
-            template: |
-              <div class="flex justify-between text-center">
-                <div>
-                  <div class="color-highlight size-h3">{{ .JSON.Int "photos" | formatNumber }}</div>
-                  <div class="size-h6">PHOTOS</div>
-                </div>
-                <div>
-                  <div class="color-highlight size-h3">{{ .JSON.Int "videos" | formatNumber }}</div>
-                  <div class="size-h6">VIDEOS</div>
-                </div>
-                <div>
-                  <div class="color-highlight size-h3">{{ div (.JSON.Int "usage" | toFloat) 1073741824 | toInt | formatNumber }}GB</div>
-                  <div class="size-h6">STORAGE</div>
-                </div>
-              </div>
-
-          - type: custom-api
-            title: Nextcloud
-            cache: 1h
-            url: http://nextcloud/ocs/v2.php/apps/serverinfo/api/v1/info?format=json
-            headers:
-              OCS-APIREQUEST: "true"
-              Authorization: Basic ${NEXTCLOUD_BASIC_AUTH}
-              Accept: application/json
-            template: |
-              <div class="flex justify-between text-center">
-                <div>
-                  <div class="color-highlight size-h3">{{ .JSON.Int "ocs.data.nextcloud.storage.num_files" | formatNumber }}</div>
-                  <div class="size-h6">FILES</div>
-                </div>
-                <div>
-                  <div class="color-highlight size-h3">{{ div (.JSON.Int "ocs.data.nextcloud.storage.used" | toFloat) 1073741824 | toInt | formatNumber }}GB</div>
-                  <div class="size-h6">STORAGE</div>
-                </div>
-                <div>
-                  <div class="color-highlight size-h3">{{ .JSON.Int "ocs.data.nextcloud.storage.num_users" | formatNumber }}</div>
-                  <div class="size-h6">USERS</div>
-                </div>
-              </div>
-
       - size: full
         widgets:
           - type: docker-containers
             title: All Containers
             hide-by-default: false
+            running-only: false
