@@ -199,7 +199,6 @@ sudo mkdir -p \
   /opt/portainer \
   /opt/monitoring/prometheus \
   /opt/monitoring/grafana \
-  /opt/monitoring/uptime-kuma \
   /opt/docker \
   /opt/dev/postgres \
   /opt/dev/elasticsearch

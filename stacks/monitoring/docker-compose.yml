@@ -9,8 +9,6 @@ services:
     container_name: prometheus
     ports:
       - "9090:9090"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"   # lets prometheus reach node-exporter on host network
     volumes:
       - /opt/monitoring/prometheus:/prometheus
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
@@ -55,6 +53,17 @@ services:
     networks:
       - server-net
 
+  blackbox:
+    image: prom/blackbox-exporter:latest
+    container_name: blackbox
+    ports:
+      - "9115:9115"
+    volumes:
+      - ./blackbox/blackbox.yml:/etc/blackbox_exporter/config.yml:ro
+    restart: unless-stopped
+    networks:
+      - server-net
+
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
@@ -67,17 +76,6 @@ services:
       GF_USERS_ALLOW_SIGN_UP: "false"
       GF_SERVER_ROOT_URL: https://${GRAFANA_DOMAIN}
       GF_SERVER_DOMAIN: ${GRAFANA_DOMAIN}
-    restart: unless-stopped
-    networks:
-      - server-net
-
-  uptime-kuma:
-    image: louislam/uptime-kuma:1
-    container_name: uptime-kuma
-    ports:
-      - "3002:3001"
-    volumes:
-      - /opt/monitoring/uptime-kuma:/app/data
     restart: unless-stopped
     networks:
       - server-net
