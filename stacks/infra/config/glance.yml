@@ -18,6 +18,9 @@ pages:
             servers:
               - type: local
                 name: oryx
+                disk-paths:
+                  - /
+                  - /mnt/ssd
 
           - type: docker-containers
             title: Containers
