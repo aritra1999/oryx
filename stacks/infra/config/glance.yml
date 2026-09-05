@@ -65,8 +65,8 @@ pages:
           - type: markets
             title: Markets
             markets:
-              - symbol: SAP
-                name: SAP SE
+              - symbol: SAP.DE
+                name: SAP SE (Frankfurt)
               - symbol: "^GSPC"
                 name: S&P 500
               - symbol: "^NSEI"
@@ -78,7 +78,7 @@ pages:
 
           - type: rss
             title: Tech News
-            style: horizontal-cards
+            style: detailed-list
             limit: 24
             collapse-after: 8
             feeds:
