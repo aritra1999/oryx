@@ -217,6 +217,12 @@ sudo mkdir -p \
   /mnt/ssd/immich/model-cache
 
 sudo chown -R "$(whoami):$(whoami)" /opt /mnt/ssd
+
+info "Setting service-specific directory ownership..."
+# Prometheus runs as nobody (65534)
+sudo chown -R 65534:65534 /opt/monitoring/prometheus
+# Grafana runs as grafana (472)
+sudo chown -R 472:472 /opt/monitoring/grafana
 ok "All directories created"
 
 # ── Phase 7: Docker ───────────────────────────────────────────────────────────
