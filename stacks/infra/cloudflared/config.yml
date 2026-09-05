@@ -1,0 +1,24 @@
+tunnel: e571f36e-135a-4219-90fc-a1f1cf4e7f8b
+credentials-file: /etc/cloudflared/e571f36e-135a-4219-90fc-a1f1cf4e7f8b.json
+
+ingress:
+  - hostname: home.aritra.fyi
+    service: http://glance:8080
+
+  - hostname: notes.aritra.fyi
+    service: http://affine:3000
+
+  - hostname: drive.aritra.fyi
+    service: http://nextcloud:8081
+
+  - hostname: photos.aritra.fyi
+    service: http://immich-server:2283
+
+  - hostname: grafana.aritra.fyi
+    service: http://grafana:3001
+
+  - hostname: status.aritra.fyi
+    service: http://uptime-kuma:3002
+
+  # catch-all
+  - service: http_status:404
