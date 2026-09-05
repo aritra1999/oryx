@@ -34,6 +34,8 @@ services:
     container_name: glance
     ports:
       - "8080:8080"
+    environment:
+      PIHOLE_PASSWORD: ${PIHOLE_PASSWORD}
     volumes:
       - /opt/glance:/app/assets
       - ./config:/app/config

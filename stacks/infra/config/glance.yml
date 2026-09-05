@@ -9,7 +9,7 @@ pages:
   - name: Home
     columns:
 
-      # ── Left sidebar — system & services ─────────────────────────────────
+      # ── Left sidebar — system, DNS, containers, admin ─────────────────────
       - size: small
         widgets:
 
@@ -26,16 +26,35 @@ pages:
                   "/boot/efi":
                     hide: true
 
+          - type: dns-stats
+            title: Pi-hole
+            service: pihole
+            url: http://192.168.2.100:8053
+            password: ${PIHOLE_PASSWORD}
+
           - type: docker-containers
             title: Containers
             hide-by-default: false
 
-      # ── Main column — apps, markets, news ────────────────────────────────
+          - type: bookmarks
+            title: Admin
+            groups:
+              - title: Internal (Tailscale)
+                links:
+                  - title: Portainer
+                    url: http://100.106.157.117:9000
+                    icon: si:portainer
+                  - title: Pi-hole
+                    url: http://100.106.157.117:8053/admin
+                    icon: si:pihole
+
+      # ── Main column — search, services, markets, news ────────────────────
       - size: full
         widgets:
 
           - type: search
             autofocus: true
+            search-engine: https://search.brave.com/search?q={QUERY}
 
           - type: monitor
             title: Services
@@ -57,20 +76,8 @@ pages:
                 url: https://status.aritra.fyi
                 icon: si:uptimekuma
 
-          - type: bookmarks
-            title: Admin
-            groups:
-              - title: Internal (Tailscale)
-                links:
-                  - title: Portainer
-                    url: http://100.106.157.117:9000
-                    icon: si:portainer
-                  - title: Pi-hole
-                    url: http://100.106.157.117:8053/admin
-                    icon: si:pihole
-
           - type: markets
-            title: Markets
+            title: Indices & Stocks
             markets:
               - symbol: SAP.DE
                 name: SAP SE (Frankfurt)
