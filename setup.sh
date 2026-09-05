@@ -208,6 +208,7 @@ touch /opt/glance/glance.yml 2>/dev/null || sudo touch /opt/glance/glance.yml
 info "Creating /mnt/ssd/ app data directories..."
 sudo mkdir -p \
   /mnt/ssd/affine/data \
+  /mnt/ssd/affine/config \
   /mnt/ssd/affine/postgres \
   /mnt/ssd/nextcloud/data \
   /mnt/ssd/nextcloud/config \

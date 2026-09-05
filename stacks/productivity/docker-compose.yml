@@ -6,7 +6,7 @@ services:
 
   # ── Shared infrastructure ──────────────────────────────────────────────────
   postgres:
-    image: postgres:16-alpine
+    image: pgvector/pgvector:pg16
     container_name: prod-postgres
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
@@ -14,6 +14,11 @@ services:
     volumes:
       - /mnt/ssd/affine/postgres:/var/lib/postgresql/data
       - ./init-db.sh:/docker-entrypoint-initdb.d/init-db.sh:ro
+    healthcheck:
+      test: ['CMD', 'pg_isready', '-U', '${POSTGRES_USER}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
     restart: unless-stopped
     networks:
       - server-net
@@ -21,26 +26,52 @@ services:
   redis:
     image: redis:7-alpine
     container_name: prod-redis
+    healthcheck:
+      test: ['CMD', 'redis-cli', '--raw', 'incr', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
     restart: unless-stopped
     networks:
       - server-net
 
   # ── AFFiNE ─────────────────────────────────────────────────────────────────
+  affine_migration:
+    image: ghcr.io/toeverything/affine:stable
+    container_name: affine_migration
+    command: ['sh', '-c', 'node ./scripts/self-host-predeploy.js']
+    volumes:
+      - /mnt/ssd/affine/data:/root/.affine/storage
+      - /mnt/ssd/affine/config:/root/.affine/config
+    environment:
+      REDIS_SERVER_HOST: prod-redis
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@prod-postgres:5432/affine
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - server-net
+
   affine:
-    image: ghcr.io/toeverything/affine-graphql:stable
+    image: ghcr.io/toeverything/affine:stable
     container_name: affine
     ports:
       - "3000:3010"
     volumes:
       - /mnt/ssd/affine/data:/root/.affine/storage
+      - /mnt/ssd/affine/config:/root/.affine/config
     environment:
-      REDIS_SERVER_HOST: redis
-      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/affine
-      AFFINE_ADMIN_EMAIL: ${AFFINE_ADMIN_EMAIL}
-      AFFINE_ADMIN_PASSWORD: ${AFFINE_ADMIN_PASSWORD}
+      REDIS_SERVER_HOST: prod-redis
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@prod-postgres:5432/affine
     depends_on:
-      - postgres
-      - redis
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      affine_migration:
+        condition: service_completed_successfully
     restart: unless-stopped
     networks:
       - server-net
@@ -56,19 +87,21 @@ services:
       - /mnt/ssd/nextcloud/config:/var/www/html/config
       - /mnt/ssd/nextcloud/apps:/var/www/html/custom_apps
     environment:
-      POSTGRES_HOST: postgres
+      POSTGRES_HOST: prod-postgres
       POSTGRES_DB: nextcloud
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-      REDIS_HOST: redis
+      REDIS_HOST: prod-redis
       NEXTCLOUD_ADMIN_USER: ${NEXTCLOUD_ADMIN_USER}
       NEXTCLOUD_ADMIN_PASSWORD: ${NEXTCLOUD_ADMIN_PASSWORD}
       NEXTCLOUD_TRUSTED_DOMAINS: "${NEXTCLOUD_DOMAIN} localhost"
       OVERWRITEPROTOCOL: https
       OVERWRITECLIURL: https://${NEXTCLOUD_DOMAIN}
     depends_on:
-      - postgres
-      - redis
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     restart: unless-stopped
     networks:
       - server-net
