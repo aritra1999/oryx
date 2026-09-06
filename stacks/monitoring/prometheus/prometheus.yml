@@ -26,7 +26,6 @@ scrape_configs:
           - https://drive.aritra.fyi
           - https://photos.aritra.fyi
           - https://grafana.aritra.fyi
-          - https://supabase.aritra.fyi
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
