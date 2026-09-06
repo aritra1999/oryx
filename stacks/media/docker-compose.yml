@@ -14,6 +14,8 @@ services:
       - /etc/localtime:/etc/localtime:ro
     devices:
       - /dev/dri:/dev/dri   # Intel Quick Sync Video (iGPU transcoding)
+    group_add:
+      - "991"               # render group — required for /dev/dri/renderD128 access
     environment:
       DB_HOSTNAME: immich-postgres
       DB_USERNAME: ${IMMICH_DB_USER}
