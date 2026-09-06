@@ -123,7 +123,7 @@ pages:
                 limit: 20
                 collapse-after: 8
                 feeds:
-                  - url: http://feeds.bbci.co.uk/news/world/rss.xml
+                  - url: https://feeds.bbci.co.uk/news/world/rss.xml
                     title: BBC World
                   - url: https://feeds.skynews.com/feeds/rss/world.xml
                     title: Sky News
