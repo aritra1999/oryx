@@ -17,5 +17,8 @@ ingress:
   - hostname: grafana.aritra.fyi
     service: http://grafana:3001
 
+  - hostname: supabase.aritra.fyi
+    service: http://supabase-envoy:8000
+
   # catch-all
   - service: http_status:404
