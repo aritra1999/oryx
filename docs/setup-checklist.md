@@ -166,11 +166,19 @@ Detailed commands for every step are in [`docs/setup.md`](setup.md).
 
 ## Backup
 
-- [ ] Install rclone, configure Google Drive remote
-- [ ] Test rclone sync, verify files appear in Drive
-- [ ] Make backup scripts executable (`~/oryx/backup/*.sh`)
-- [ ] Create backup mount point (`/mnt/backup`)
-- [ ] Set up weekly rclone systemd timer
+Backs up to an external drive at `/mnt/backup` — weekly via systemd timer.
+
+**When ready (plug in external drive to Optiplex):**
+
+- [ ] Identify external drive device (`lsblk`)
+- [ ] Create mount point: `sudo mkdir -p /mnt/backup`
+- [ ] Mount drive: `sudo mount /dev/sdX /mnt/backup`
+- [ ] Add to `/etc/fstab` with `nofail` for auto-mount on boot
+- [ ] Make scripts executable: `chmod +x ~/oryx/backup/*.sh`
+- [ ] Test: `bash ~/oryx/backup/check-mount.sh`
+- [ ] Test dry run: `bash ~/oryx/backup/backup.sh --dry-run`
+- [ ] Set up weekly systemd timer (see `docs/setup.md`)
+- [ ] Verify restore works: `bash ~/oryx/backup/restore.sh --list`
 
 ---
 
