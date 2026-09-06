@@ -196,8 +196,3 @@ pages:
             title: All Containers
             hide-by-default: false
             running-only: false
-
-          - type: iframe
-            title: Uptime & Response Times
-            source: https://grafana.aritra.fyi/d/xtkCtBkiz/prometheus-blackbox-exporter?var-interval=10s&from=now-3h&to=now&timezone=browser&var-target=$__all&refresh=30s&kiosk
-            height: 600
