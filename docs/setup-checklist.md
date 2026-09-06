@@ -36,7 +36,7 @@ Detailed commands for every step are in [`docs/setup.md`](setup.md).
 - [x] At drive selection, delete all existing partitions on the 256 GB NVMe (Fedora)
 - [x] Install Windows to the unallocated space
 - [x] Verify Windows boots cleanly from NVMe
-- [x] Open Disk Management → format the 1 TB HDD as NTFS (D: drive)  ← do this now
+- [x] Open Disk Management → format the 1 TB HDD as NTFS (D: drive)
 
 ---
 
@@ -67,7 +67,7 @@ Detailed commands for every step are in [`docs/setup.md`](setup.md).
 - [x] Enable UFW — allow SSH, deny everything else
 - [x] Enable automatic security updates
 - [x] Set static LAN IP (`192.168.2.100`) via Netplan
-- [ ] Reserve IP in router DHCP settings
+- [x] Reserve IP — static IP set via Netplan + Speedport DHCP reservation
 
 ---
 
@@ -84,7 +84,7 @@ Detailed commands for every step are in [`docs/setup.md`](setup.md).
 - [x] Install Docker
 - [x] Add `aritra` to docker group, log out and back in
 - [x] Configure Docker data-root → NVMe (`/opt/docker`)
-- [ ] Create shared Docker network (`server-net`)
+- [x] Create shared Docker network (`server-net`)
 - [x] Clone oryx repo to `~/oryx`
 - [x] Create `~/stacks/{infra,media,productivity,monitoring,dev}`
 
@@ -94,80 +94,73 @@ Detailed commands for every step are in [`docs/setup.md`](setup.md).
 
 - [x] Install Tailscale
 - [x] `tailscale up --ssh`, authorize via URL
-- [ ] Note Tailscale IP, test SSH from laptop over Tailscale
+- [x] Note Tailscale IP (`100.106.157.117`), SSH works over Tailscale
 - [ ] Set node key to never expire in Tailscale admin console
 
 ---
 
 ## Infrastructure stack
 
-- [x] Fill in `~/stacks/infra/.env` (Pi-hole password, timezone)
+- [x] Fill in `~/stacks/infra/.env`
 - [x] Create `docker-compose.yml` for infra stack
 - [x] Create `config/glance.yml`
-- [x] Start Pi-hole, Glance, Watchtower, Portainer
-- [ ] Set router primary DNS to `192.168.2.100`
-- [x] Verify Pi-hole admin loads (`server-ts-ip:8053`)
-- [x] Verify Glance loads (`server-ts-ip:8080`)
-- [x] Verify Portainer loads (`server-ts-ip:9000`), create admin account
+- [x] Start Pi-hole, Glance, Watchtower, Portainer, cloudflared
+- [x] Pi-hole DHCP enabled (Speedport workaround for DNS)
+- [x] Verify Pi-hole admin loads (`100.106.157.117:8053`)
+- [x] Verify Glance loads (`https://home.aritra.fyi`)
+- [x] Verify Portainer loads (`100.106.157.117:9000`), create admin account
 - [ ] Confirm ad-blocking works from a home device
 
 ---
 
 ## Cloudflare Tunnel
 
-**On server:**
-- [x] Install cloudflared
-- [x] `cloudflared tunnel login`
-- [x] `cloudflared tunnel create oryx`
-- [x] Create DNS routes for all 6 subdomains (`home`, `notes`, `drive`, `photos`, `grafana`, `status`)
-- [x] Get tunnel token (`cloudflared tunnel token oryx`)
-- [x] Paste tunnel token into `infra/.env`
-- [x] Start cloudflared, verify 4 connections registered in logs
+- [x] Install cloudflared, login, create `oryx` tunnel
+- [x] Create DNS routes for all subdomains (`home`, `notes`, `drive`, `photos`, `grafana`)
+- [x] Configure ingress rules via Cloudflare dashboard
+- [x] Start cloudflared, connections verified
 
-**Cloudflare Access (one.dash.cloudflare.com):**
-- [x] Add self-hosted application for each subdomain (6 total)
-- [x] Set policy: allow your email via Google/GitHub OAuth
-- [x] Test from mobile data — all subdomains should hit the CF Access login
+**Cloudflare Access:**
+- [x] `home`, `grafana` — protected by CF Access (email OTP)
+- [x] `notes`, `drive`, `photos` — own auth, CF Access removed
+- [x] Verified CF Access login works from mobile data
 
 ---
 
-## Media stack (Immich only)
+## Media stack (Immich)
 
 - [x] Fill in `~/stacks/media/.env`
 - [x] Start media stack
-- [x] Verify Immich is running (`server-ts-ip:2283`)
+- [x] Verify Immich loads (`https://photos.aritra.fyi`)
+- [x] Android app connected
 
 ---
 
 ## Productivity stack
 
 - [x] Fill in `~/stacks/productivity/.env`
-- [x] Create `init-db.sh`
 - [x] Start productivity stack
-- [x] Verify AFFiNE loads (`notes.aritra.fyi`)
-- [x] Verify Nextcloud loads (`drive.aritra.fyi`)
+- [x] Verify AFFiNE loads (`https://notes.aritra.fyi`)
+- [x] Verify Nextcloud loads (`https://drive.aritra.fyi`)
+- [x] Android apps connected
 
 ---
 
 ## Monitoring stack
 
-- [ ] Create `prometheus.yml`
-- [ ] Fill in `~/stacks/monitoring/.env`
-- [ ] Start monitoring stack
-
-**Grafana (`server-ts-ip:3001`):**
-- [ ] Add Prometheus data source
-- [ ] Import Node Exporter dashboard (ID: 1860)
-- [ ] Import cAdvisor dashboard (ID: 14282)
+- [x] `prometheus.yml` + `blackbox.yml` configured
+- [x] Fill in `~/stacks/monitoring/.env`
+- [x] Start monitoring stack (Prometheus, Node Exporter, cAdvisor, Blackbox, Grafana)
+- [x] Add Prometheus data source in Grafana
+- [x] Import Node Exporter dashboard (ID: 1860)
+- [x] Import cAdvisor dashboard (ID: 14282)
+- [x] Import Blackbox Exporter dashboard (ID: 7587)
+- [ ] Set node key to never expire in Tailscale admin console
 - [ ] Add Discord webhook contact point, send test
 - [ ] Create CPU alert (> 85% for 5 min)
 - [ ] Create RAM alert (> 88% for 5 min)
 - [ ] Create disk full alert (> 82%)
 - [ ] Create container down alert
-
-- [ ] Create admin account
-- [ ] Add HTTP monitors for all 6 public subdomains (interval: 60s)
-- [ ] Add Discord notification, assign to all monitors
 
 ---
 
@@ -184,7 +177,7 @@ Detailed commands for every step are in [`docs/setup.md`](setup.md).
 ## Final checks
 
 - [ ] All containers running, none in `Exited` state
-- [ ] All 6 public subdomains load behind CF Access (test on mobile data)
+- [ ] All public subdomains load correctly
 - [ ] SSH via Tailscale works from outside home network
 - [ ] Pi-hole blocking ads on home network
 - [ ] Grafana shows live CPU/RAM/disk metrics
@@ -194,7 +187,7 @@ Detailed commands for every step are in [`docs/setup.md`](setup.md).
 
 ---
 
-## Secrets — store in Bitwarden before starting
+## Secrets — store in Bitwarden
 
 - [ ] Pi-hole web password
 - [ ] Cloudflare Tunnel token
