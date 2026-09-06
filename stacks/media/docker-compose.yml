@@ -12,6 +12,8 @@ services:
     volumes:
       - /mnt/ssd/immich/upload:/usr/src/app/upload
       - /etc/localtime:/etc/localtime:ro
+    devices:
+      - /dev/dri:/dev/dri   # Intel Quick Sync Video (iGPU transcoding)
     environment:
       DB_HOSTNAME: immich-postgres
       DB_USERNAME: ${IMMICH_DB_USER}
