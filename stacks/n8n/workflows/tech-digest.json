@@ -106,19 +106,11 @@
       "position": [1420, 380],
       "parameters": {
         "method": "POST",
-        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent",
-        "authentication": "genericCredentialType",
-        "genericAuthType": "httpQueryAuth",
+        "url": "=https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key={{ $env.N8N_GEMINI_API_KEY }}",
         "sendBody": true,
         "contentType": "raw",
         "rawContentType": "application/json",
         "body": "={{ $json.body }}"
-      },
-      "credentials": {
-        "httpQueryAuth": {
-          "id": "",
-          "name": "Gemini API Key"
-        }
       }
     },
     {
@@ -139,7 +131,7 @@
       "position": [1900, 380],
       "parameters": {
         "method": "POST",
-        "url": "REPLACE_WITH_YOUR_DISCORD_WEBHOOK_URL",
+        "url": "={{ $env.N8N_DISCORD_WEBHOOK_URL }}",
         "sendBody": true,
         "contentType": "raw",
         "rawContentType": "application/json",
