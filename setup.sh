@@ -117,6 +117,26 @@ else
   ok "Automatic security updates enabled"
 fi
 
+# ── Phase 3b: fail2ban ────────────────────────────────────────────────────────
+section "Phase 3b — fail2ban (SSH brute-force protection)"
+
+if command -v fail2ban-client &>/dev/null; then
+  skip "fail2ban already installed"
+else
+  info "Installing fail2ban..."
+  sudo apt-get install -y fail2ban
+  sudo tee /etc/fail2ban/jail.local > /dev/null << 'EOF'
+[sshd]
+enabled  = true
+port     = ssh
+maxretry = 5
+bantime  = 1h
+findtime = 10m
+EOF
+  sudo systemctl enable --now fail2ban
+  ok "fail2ban installed — SSH blocked after 5 failed attempts for 1 hour"
+fi
+
 # ── Phase 4: Static IP ────────────────────────────────────────────────────────
 section "Phase 4 — Static LAN IP"
 
