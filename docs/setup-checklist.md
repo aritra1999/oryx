@@ -162,7 +162,7 @@ Detailed commands for every step are in [`docs/setup.md`](setup.md).
 - [x] Disk full alert (> 82%)
 - [x] Container down alert
 - [x] SSL cert expiry alert (< 30 days)
-- [ ] Set Tailscale node key to never expire
+- [x] Set Tailscale node key to never expire
 
 ---
 
