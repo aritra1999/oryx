@@ -174,7 +174,10 @@
         "sendBody": true,
         "contentType": "raw",
         "rawContentType": "application/json",
-        "body": "={{ JSON.stringify({ username: 'Tech Digest', content: $json.section + '\\n**' + $json.title + '** ([read](' + $json.url + '))\\n' + $json.summary + '\\n' + ($json.tags || []).map(t => '`#' + t + '`').join(' ') }) }}"
+        "body": "={{ JSON.stringify({ username: 'Tech Digest', content: $json.section + '\\n**' + $json.title + '** ([read](' + $json.url + '))\\n' + $json.summary + '\\n' + ($json.tags || []).map(t => '`#' + t + '`').join(' ') }) }}",
+        "retryOnFail": true,
+        "maxTries": 3,
+        "waitBetweenTries": 30000
       }
     },
     {
@@ -187,7 +190,7 @@
         380
       ],
       "parameters": {
-        "amount": 3,
+        "amount": 5,
         "unit": "seconds"
       }
     }
