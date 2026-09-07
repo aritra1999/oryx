@@ -300,7 +300,7 @@
       "main": [
         [
           {
-            "node": "Gemini 3.8 Flash",
+            "node": "Gemini 3.5 Flash Lite",
             "type": "main",
             "index": 0
           }
