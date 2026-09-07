@@ -6,11 +6,60 @@ Assumes the server is running and you have SSH access (via Tailscale or LAN).
 **Server LAN IP:** `192.168.1.100`  
 **Server Tailscale IP:** run `tailscale ip -4` once and note it here: `_______`  
 **SSH:** `ssh aritra@<tailscale-ip>`  
-**Portainer:** `http://<tailscale-ip>:9000` — web UI for all containers
+**Portainer:** `https://portainer.aritra.fyi` (CF Access) · `http://<tailscale-ip>:9000` (Tailscale fallback)
 
 ---
 
 ## 0. Daily commands you'll actually use
+
+### oryx-refresh — pull config changes and recreate containers
+
+Defined in `~/.zshrc`. Pulls the latest from the oryx repo, then updates one stack, one service, or everything.
+
+```bash
+oryx-refresh                   # pull repo + refresh all stacks
+oryx-refresh infra             # pull repo + refresh the infra stack only
+oryx-refresh infra cloudflared # pull repo + refresh a single service
+```
+
+Function definition (keep in `~/.zshrc`):
+
+```zsh
+oryx-refresh() {
+  local stack="${1:-}"
+  local service="${2:-}"
+  local stacks=(infra media productivity monitoring)
+
+  echo "→ pulling latest..."
+  cd ~/oryx && git pull
+
+  if [[ -n "$stack" ]]; then
+    local stack_dir=~/stacks/$stack
+    if [[ ! -f "$stack_dir/docker-compose.yml" ]]; then
+      echo "✗ unknown stack: $stack"
+      echo "  available: ${stacks[*]}"
+      return 1
+    fi
+    echo "→ refreshing $stack${service:+ ($service)}..."
+    if [[ -n "$service" ]]; then
+      (cd "$stack_dir" && docker compose pull "$service" && docker compose up -d "$service")
+    else
+      (cd "$stack_dir" && docker compose pull && docker compose up -d --remove-orphans)
+    fi
+  else
+    for s in "${stacks[@]}"; do
+      if [[ -f ~/stacks/$s/docker-compose.yml ]]; then
+        echo "→ refreshing $s..."
+        (cd ~/stacks/$s && docker compose pull && docker compose up -d --remove-orphans)
+      fi
+    done
+  fi
+
+  echo "✓ done"
+}
+```
+
+---
 
 ```bash
 # See all running containers and their status
@@ -181,42 +230,7 @@ Check https://www.cloudflarestatus.com — if it's a Cloudflare outage, nothing 
 
 ---
 
-## 5. Pi-hole broke my home internet (DNS broken)
-
-**Symptom:** Devices on the home network can't resolve any domains, internet is down for everyone.
-
-### Immediate fix — bypass Pi-hole on the affected device
-On the device that's broken, manually set DNS to `1.1.1.1` in network settings.
-
-### Fix Pi-hole on the server
-```bash
-# Check if Pi-hole is running
-docker ps | grep pihole
-
-# If it's down, restart it
-docker restart pihole
-
-# If it's up but blocking too aggressively (false positives):
-# Go to http://<tailscale-ip>:8053/admin → Whitelist the domain
-```
-
-### Emergency — disable Pi-hole as router DNS
-Log into your router admin UI → DHCP settings → change primary DNS back to `1.1.1.1`.
-Now all devices bypass Pi-hole until you fix the issue and re-enable it.
-
-### Pi-hole container won't start
-```bash
-cd ~/stacks/infra
-docker compose logs pihole
-# Common fix: port 53 is in use by systemd-resolved
-sudo systemctl stop systemd-resolved
-sudo systemctl disable systemd-resolved
-docker compose up -d pihole
-```
-
----
-
-## 6. Disk full
+## 5. Disk full
 
 ### Check which disk is full
 ```bash
@@ -291,7 +305,7 @@ du -sh /mnt/hdd/jellyfin/movies/* | sort -hr | head -20
 
 ---
 
-## 7. Container broken after an update
+## 6. Container broken after an update
 
 **Symptom:** Watchtower updated a container overnight and now it doesn't work.
 
@@ -322,7 +336,7 @@ labels:
 
 ---
 
-## 8. Can't log into Cloudflare Access (locked out)
+## 7. Can't log into Cloudflare Access (locked out)
 
 **Symptom:** You can't authenticate to any public subdomain — the Cloudflare Access page never lets you through.
 
@@ -337,7 +351,7 @@ labels:
 
 ---
 
-## 9. Restore from Borg backup
+## 8. Restore from Borg backup
 
 ```bash
 # List available archives
@@ -375,7 +389,7 @@ docker exec nextcloud php occ files:scan --all
 
 ---
 
-## 10. Database issues
+## 9. Database issues
 
 ### Postgres won't start
 ```bash
@@ -404,7 +418,7 @@ docker exec -it prod-postgres psql -U appuser -d nextcloud
 
 ---
 
-## 11. Updating services manually (without Watchtower)
+## 10. Updating services manually (without Watchtower)
 
 When you want to update a specific service on your own schedule:
 
@@ -440,7 +454,7 @@ sudo reboot   # only if there's a kernel update (check: ls /var/run/reboot-requi
 
 ---
 
-## 12. Drive failure
+## 11. Drive failure
 
 ### SATA SSD (internal bay) fails
 
@@ -489,7 +503,7 @@ sudo smartctl -H /dev/nvme0  # NVMe
 
 ---
 
-## 13. Jellyfin-specific issues
+## 12. Jellyfin-specific issues
 
 ### Media not showing up
 ```bash
@@ -518,7 +532,7 @@ In Jellyfin UI → Dashboard → Playback → Transcoding:
 
 ---
 
-## 14. Immich-specific issues
+## 13. Immich-specific issues
 
 ### ML/face recognition not working
 ```bash
@@ -542,7 +556,7 @@ Immich UI → Administration → Jobs → All Jobs → Run
 
 ---
 
-## 15. Nextcloud-specific issues
+## 14. Nextcloud-specific issues
 
 ### Nextcloud in maintenance mode (can't log in)
 ```bash
@@ -565,7 +579,7 @@ docker exec nextcloud php occ files:scan --all
 
 ---
 
-## 16. Backup issues
+## 15. Backup issues
 
 ### Borg backup failed
 ```bash
@@ -592,7 +606,7 @@ rclone config reconnect gdrive:
 
 ---
 
-## 17. Remote maintenance checklist (when you're not home)
+## 16. Remote maintenance checklist (when you're not home)
 
 When something goes wrong and you're in India / another country:
 

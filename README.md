@@ -24,7 +24,7 @@ Home server running on a Dell Optiplex 7060 Micro.
 ┌──────────────┬────────────────────────────────────────────────────┐
 │  OS + swap   │  Services pool                                     │
 │  ~35 GB      │  ~220 GB  (grows with containers)                  │
-│  Ubuntu LTS  │  Docker · Pi-hole · Glance · Portainer             │
+│  Ubuntu LTS  │  Docker · Glance · Portainer                       │
 │              │  Grafana · Prometheus · Blackbox Exporter · Tailscale    │
 └──────────────┴────────────────────────────────────────────────────┘
 
@@ -60,7 +60,6 @@ Hardware: i5-8500T · 6 cores · 16 GB RAM
 | PostgreSQL (shared) | ~500 MB | 0.3 | ~20 GB (NVMe) |
 | Redis | ~256 MB | 0.1 | ~1 GB (NVMe) |
 | Prometheus + exporters | ~350 MB | 0.2 | ~15 GB (NVMe) |
-| Pi-hole | ~512 MB | 0.5 | ~1 GB (NVMe) |
 | Portainer | ~150 MB | ~0 | ~1 GB (NVMe) |
 | Glance | ~128 MB | ~0 | <1 GB (NVMe) |
 | cloudflared | ~100 MB | ~0 | <1 GB (NVMe) |
@@ -71,7 +70,7 @@ Hardware: i5-8500T · 6 cores · 16 GB RAM
 
 | | Used | Available | Headroom |
 |---|---|---|---|
-| RAM | ~11 GB | 16 GB | ~5 GB |
+| RAM | ~10.5 GB | 16 GB | ~5.5 GB |
 | CPU (peak) | ~4 cores | 6 cores | ~2 cores |
 | NVMe | ~35 GB fixed + variable services | 256 GB | ~220 GB pool |
 | SATA SSD | ~592 GB allocated | 1 TB | ~408 GB free |
@@ -96,8 +95,7 @@ Hardware: i5-8500T · 6 cores · 16 GB RAM
 | Nextcloud | https://drive.aritra.fyi | Cloudflare Access |
 | Immich | https://photos.aritra.fyi | Cloudflare Access |
 | Grafana | https://grafana.aritra.fyi | Cloudflare Access |
-| Pi-hole admin | `server-ts-ip:8053` | Tailscale only |
-| Portainer | `server-ts-ip:9000` | Tailscale only |
+| Portainer | `https://portainer.aritra.fyi` (CF Access) · `server-ts-ip:9000` (Tailscale) | Cloudflare Access |
 | SSH | `ssh aritra@server-ts-ip` | Tailscale only |
 
 > Jellyfin deferred — adding later once a media drive is available.
@@ -108,7 +106,7 @@ Hardware: i5-8500T · 6 cores · 16 GB RAM
 
 ```
 ~/stacks/
-  infra/          Pi-hole · cloudflared · Watchtower · Glance · Portainer
+  infra/          cloudflared · Watchtower · Glance · Portainer
   media/          Immich
   productivity/   AFFiNE · Nextcloud
   monitoring/     Prometheus · Node Exporter · cAdvisor · Grafana · Blackbox Exporter
