@@ -91,6 +91,7 @@ services:
       N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
       N8N_GEMINI_API_KEY: ${N8N_GEMINI_API_KEY}
       N8N_DISCORD_WEBHOOK_URL: ${N8N_DISCORD_WEBHOOK_URL}
+      N8N_BLOCK_ENV_ACCESS_IN_NODE: "false"
     volumes:
       - /opt/n8n:/home/node/.n8n
     restart: unless-stopped
