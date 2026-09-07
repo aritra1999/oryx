@@ -215,6 +215,7 @@ sudo mkdir -p \
   /opt/cloudflared \
   /opt/glance \
   /opt/portainer \
+  /opt/n8n \
   /opt/monitoring/prometheus \
   /opt/monitoring/grafana \
   /opt/docker \

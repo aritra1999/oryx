@@ -200,6 +200,7 @@ Backs up to an external drive at `/mnt/backup` — weekly via systemd timer.
 - [x] Nextcloud admin password
 - [x] AFFiNE admin password
 - [x] Shared PostgreSQL password
+- [ ] n8n encryption key
 - [x] Grafana admin password
 - [x] Discord webhook URL
 - [x] Tailscale IP (`100.106.157.117`)

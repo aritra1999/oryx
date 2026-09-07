@@ -431,6 +431,7 @@ AFFINE_ADMIN_EMAIL=you@example.com
 AFFINE_ADMIN_PASSWORD=<strong_password>
 NEXTCLOUD_ADMIN_USER=aritra
 NEXTCLOUD_ADMIN_PASSWORD=<strong_password>
+N8N_ENCRYPTION_KEY=<strong_random_secret>   # used to encrypt stored credentials
 ```
 
 `~/stacks/productivity/docker-compose.yml`:
