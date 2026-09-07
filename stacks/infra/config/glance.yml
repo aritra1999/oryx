@@ -65,18 +65,18 @@ pages:
               - title: Grafana
                 url: https://grafana.aritra.fyi
                 icon: si:grafana
+              - title: Portainer
+                url: https://portainer.aritra.fyi
+                icon: si:portainer
 
           - type: bookmarks
             title: Admin
             groups:
-              - title: Internal (Tailscale)
+              - title: Admin
                 links:
                   - title: Portainer
-                    url: http://100.106.157.117:9000
+                    url: https://portainer.aritra.fyi
                     icon: si:portainer
-                  - title: Pi-hole
-                    url: http://100.106.157.117:8053/admin
-                    icon: si:pihole
 
       # ── Main column — search, services, markets, news ────────────────────
       - size: full

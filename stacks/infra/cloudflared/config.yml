@@ -17,5 +17,8 @@ ingress:
   - hostname: grafana.aritra.fyi
     service: http://grafana:3001
 
+  - hostname: portainer.aritra.fyi
+    service: http://portainer:9000
+
   # catch-all
   - service: http_status:404
