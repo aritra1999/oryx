@@ -175,7 +175,47 @@ groups:
           severity: critical
         isPaused: false
 
-      # ── Container down ────────────────────────────────────────────────────
+      # ── SSL cert expiry < 30 days ─────────────────────────────────────────
+      - uid: oryx-ssl-expiry
+        title: SSL Certificate Expiring Soon
+        condition: threshold
+        data:
+          - refId: A
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: prometheus
+            model:
+              expr: (probe_ssl_earliest_cert_expiry - time()) / 86400
+              refId: A
+              instant: true
+          - refId: threshold
+            relativeTimeRange:
+              from: 300
+              to: 0
+            datasourceUid: __expr__
+            model:
+              type: threshold
+              refId: threshold
+              expression: A
+              conditions:
+                - evaluator:
+                    type: lt
+                    params: [30]
+                  operator:
+                    type: and
+                  query:
+                    params: [A]
+                  reducer:
+                    type: min
+        noDataState: NoData
+        execErrState: Error
+        for: 1h
+        annotations:
+          summary: "SSL certificate expiring in less than 30 days"
+        labels:
+          severity: warning
+        isPaused: false
       - uid: oryx-container-down
         title: Container Down
         condition: threshold
