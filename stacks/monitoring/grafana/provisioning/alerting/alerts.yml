@@ -13,11 +13,18 @@ groups:
         condition: threshold
         data:
           - refId: A
+            relativeTimeRange:
+              from: 300
+              to: 0
             datasourceUid: prometheus
             model:
               expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)
               refId: A
+              instant: true
           - refId: threshold
+            relativeTimeRange:
+              from: 300
+              to: 0
             datasourceUid: __expr__
             model:
               type: threshold
@@ -37,7 +44,7 @@ groups:
         execErrState: Error
         for: 5m
         annotations:
-          summary: "CPU usage is {{ humanize $values.A.Value }}% on oryx"
+          summary: "CPU usage is high on oryx"
         labels:
           severity: warning
         isPaused: false
@@ -48,11 +55,18 @@ groups:
         condition: threshold
         data:
           - refId: A
+            relativeTimeRange:
+              from: 300
+              to: 0
             datasourceUid: prometheus
             model:
               expr: 100 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100)
               refId: A
+              instant: true
           - refId: threshold
+            relativeTimeRange:
+              from: 300
+              to: 0
             datasourceUid: __expr__
             model:
               type: threshold
@@ -72,7 +86,7 @@ groups:
         execErrState: Error
         for: 5m
         annotations:
-          summary: "RAM usage is {{ humanize $values.A.Value }}% on oryx"
+          summary: "RAM usage is high on oryx"
         labels:
           severity: warning
         isPaused: false
@@ -83,11 +97,18 @@ groups:
         condition: threshold
         data:
           - refId: A
+            relativeTimeRange:
+              from: 300
+              to: 0
             datasourceUid: prometheus
             model:
               expr: 100 - (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"} * 100)
               refId: A
+              instant: true
           - refId: threshold
+            relativeTimeRange:
+              from: 300
+              to: 0
             datasourceUid: __expr__
             model:
               type: threshold
@@ -107,7 +128,7 @@ groups:
         execErrState: Error
         for: 5m
         annotations:
-          summary: "NVMe disk usage is {{ humanize $values.A.Value }}% on oryx"
+          summary: "NVMe disk usage is above 82% on oryx"
         labels:
           severity: critical
         isPaused: false
@@ -118,11 +139,18 @@ groups:
         condition: threshold
         data:
           - refId: A
+            relativeTimeRange:
+              from: 300
+              to: 0
             datasourceUid: prometheus
             model:
               expr: 100 - (node_filesystem_avail_bytes{mountpoint="/mnt/ssd"} / node_filesystem_size_bytes{mountpoint="/mnt/ssd"} * 100)
               refId: A
+              instant: true
           - refId: threshold
+            relativeTimeRange:
+              from: 300
+              to: 0
             datasourceUid: __expr__
             model:
               type: threshold
@@ -142,7 +170,7 @@ groups:
         execErrState: Error
         for: 5m
         annotations:
-          summary: "SSD disk usage is {{ humanize $values.A.Value }}% on oryx"
+          summary: "SSD disk usage is above 82% on oryx"
         labels:
           severity: critical
         isPaused: false
@@ -153,11 +181,18 @@ groups:
         condition: threshold
         data:
           - refId: A
+            relativeTimeRange:
+              from: 300
+              to: 0
             datasourceUid: prometheus
             model:
               expr: count(container_last_seen{name!=""} offset 2m) - count(container_last_seen{name!=""})
               refId: A
+              instant: true
           - refId: threshold
+            relativeTimeRange:
+              from: 300
+              to: 0
             datasourceUid: __expr__
             model:
               type: threshold
