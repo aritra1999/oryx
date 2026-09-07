@@ -165,7 +165,7 @@ network:
         - to: default
           via: ${GATEWAY}
       nameservers:
-        addresses: [127.0.0.1, 1.1.1.1]   # 127.0.0.1 = Pi-hole (once running); 1.1.1.1 fallback
+        addresses: [1.1.1.1, 8.8.8.8]
 EOF
 
   sudo netplan apply
@@ -212,8 +212,6 @@ section "Phase 6 — Directory structure"
 
 info "Creating /opt/ service directories (NVMe)..."
 sudo mkdir -p \
-  /opt/pihole/etc \
-  /opt/pihole/dnsmasq \
   /opt/cloudflared \
   /opt/glance \
   /opt/portainer \
@@ -353,10 +351,9 @@ echo "  Next steps:"
 echo
 echo "  1. Log out and back in (docker group takes effect)"
 echo "  2. Run: docker network create server-net"
-echo "  3. Fill in ~/stacks/infra/.env then:"
-echo "        cd ~/stacks/infra && docker compose up -d pihole glance watchtower portainer"
-echo "  4. Set your router's primary DNS to your static LAN IP"
-echo "  5. Set up Cloudflare Tunnel (see docs/setup.md Phase 7)"
+  echo "  3. Fill in ~/stacks/infra/.env then:"
+  echo "        cd ~/stacks/infra && docker compose up -d glance watchtower portainer"
+  echo "  4. Set up Cloudflare Tunnel (see docs/setup.md Phase 7)"
 echo
 TS_IP=$(tailscale ip -4 2>/dev/null || echo "<run: tailscale ip -4>")
 echo -e "  Tailscale IP: ${BOLD}${TS_IP}${NC}"

@@ -4,21 +4,6 @@ networks:
 
 services:
 
-  pihole:
-    image: pihole/pihole:latest
-    container_name: pihole
-    network_mode: host          # required for DHCP broadcasts to reach LAN devices
-    environment:
-      TZ: ${TZ}
-      FTLCONF_webserver_api_password: ${PIHOLE_PASSWORD}
-      FTLCONF_webserver_port: "8053"   # admin UI on :8053 instead of :80
-    volumes:
-      - /opt/pihole/etc:/etc/pihole
-      - /opt/pihole/dnsmasq:/etc/dnsmasq.d
-    cap_add:
-      - NET_ADMIN
-    restart: unless-stopped
-
   cloudflared:
     image: cloudflare/cloudflared:latest
     container_name: cloudflared
@@ -35,7 +20,6 @@ services:
     ports:
       - "8080:8080"
     environment:
-      PIHOLE_PASSWORD: ${PIHOLE_PASSWORD}
       IMMICH_API_KEY: ${IMMICH_API_KEY}
       NEXTCLOUD_APP_TOKEN: ${NEXTCLOUD_APP_TOKEN}
       NEXTCLOUD_ADMIN_USER: ${NEXTCLOUD_ADMIN_USER}

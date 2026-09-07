@@ -104,12 +104,9 @@ Detailed commands for every step are in [`docs/setup.md`](setup.md).
 - [x] Fill in `~/stacks/infra/.env`
 - [x] Create `docker-compose.yml` for infra stack
 - [x] Create `config/glance.yml`
-- [x] Start Pi-hole, Glance, Watchtower, Portainer, cloudflared
-- [x] Pi-hole DHCP enabled (Speedport workaround for DNS)
-- [x] Verify Pi-hole admin loads (`100.106.157.117:8053`)
+- [x] Start Glance, Watchtower, Portainer, cloudflared
 - [x] Verify Glance loads (`https://home.aritra.fyi`)
 - [x] Verify Portainer loads (`100.106.157.117:9000`), create admin account
-- [ ] Confirm ad-blocking works from a home device
 
 ---
 
@@ -189,7 +186,6 @@ Backs up to an external drive at `/mnt/backup` — weekly via systemd timer.
 - [x] All containers running, none in `Exited` state
 - [x] All public subdomains load correctly
 - [ ] SSH via Tailscale works from outside home network
-- [ ] Pi-hole blocking ads on home network
 - [x] Grafana shows live CPU/RAM/disk metrics
 - [x] Discord test alert fires and is received
 - [x] Grafana Blackbox dashboard shows all services green
@@ -199,7 +195,6 @@ Backs up to an external drive at `/mnt/backup` — weekly via systemd timer.
 
 ## Secrets — store in Proton Pass
 
-- [x] Pi-hole web password
 - [x] Cloudflare Tunnel token
 - [x] Immich DB password
 - [x] Nextcloud admin password
