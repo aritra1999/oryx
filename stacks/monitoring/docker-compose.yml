@@ -34,6 +34,7 @@ services:
       - '--path.rootfs=/rootfs'
       - '--path.sysfs=/host/sys'
       - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+      - '--collector.rapl'
     restart: unless-stopped
     network_mode: host   # needs host network to see all interfaces + mounts
 
