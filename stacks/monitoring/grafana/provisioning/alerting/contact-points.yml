@@ -1,0 +1,16 @@
+apiVersion: 1
+
+contactPoints:
+  - orgId: 1
+    name: Discord
+    receivers:
+      - uid: discord-webhook
+        type: discord
+        settings:
+          url: ${DISCORD_WEBHOOK_URL}
+          message: |
+            {{ range .Alerts }}
+            **{{ .Labels.alertname }}** — {{ .Status | toUpper }}
+            {{ .Annotations.summary }}
+            {{ end }}
+        disableResolveMessage: false

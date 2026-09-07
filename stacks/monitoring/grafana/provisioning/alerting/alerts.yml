@@ -1,0 +1,183 @@
+apiVersion: 1
+
+groups:
+  - orgId: 1
+    name: oryx
+    folder: oryx
+    interval: 1m
+    rules:
+
+      # ── CPU > 85% for 5 min ───────────────────────────────────────────────
+      - uid: oryx-cpu-high
+        title: High CPU Usage
+        condition: threshold
+        data:
+          - refId: A
+            datasourceUid: prometheus
+            model:
+              expr: 100 - (avg by(instance) (rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100)
+              refId: A
+          - refId: threshold
+            datasourceUid: __expr__
+            model:
+              type: threshold
+              refId: threshold
+              expression: A
+              conditions:
+                - evaluator:
+                    type: gt
+                    params: [85]
+                  operator:
+                    type: and
+                  query:
+                    params: [A]
+                  reducer:
+                    type: last
+        noDataState: NoData
+        execErrState: Error
+        for: 5m
+        annotations:
+          summary: "CPU usage is {{ humanize $values.A.Value }}% on oryx"
+        labels:
+          severity: warning
+        isPaused: false
+
+      # ── RAM > 88% for 5 min ───────────────────────────────────────────────
+      - uid: oryx-ram-high
+        title: High RAM Usage
+        condition: threshold
+        data:
+          - refId: A
+            datasourceUid: prometheus
+            model:
+              expr: 100 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100)
+              refId: A
+          - refId: threshold
+            datasourceUid: __expr__
+            model:
+              type: threshold
+              refId: threshold
+              expression: A
+              conditions:
+                - evaluator:
+                    type: gt
+                    params: [88]
+                  operator:
+                    type: and
+                  query:
+                    params: [A]
+                  reducer:
+                    type: last
+        noDataState: NoData
+        execErrState: Error
+        for: 5m
+        annotations:
+          summary: "RAM usage is {{ humanize $values.A.Value }}% on oryx"
+        labels:
+          severity: warning
+        isPaused: false
+
+      # ── NVMe disk > 82% ───────────────────────────────────────────────────
+      - uid: oryx-disk-nvme-high
+        title: NVMe Disk Full
+        condition: threshold
+        data:
+          - refId: A
+            datasourceUid: prometheus
+            model:
+              expr: 100 - (node_filesystem_avail_bytes{mountpoint="/"} / node_filesystem_size_bytes{mountpoint="/"} * 100)
+              refId: A
+          - refId: threshold
+            datasourceUid: __expr__
+            model:
+              type: threshold
+              refId: threshold
+              expression: A
+              conditions:
+                - evaluator:
+                    type: gt
+                    params: [82]
+                  operator:
+                    type: and
+                  query:
+                    params: [A]
+                  reducer:
+                    type: last
+        noDataState: NoData
+        execErrState: Error
+        for: 5m
+        annotations:
+          summary: "NVMe disk usage is {{ humanize $values.A.Value }}% on oryx"
+        labels:
+          severity: critical
+        isPaused: false
+
+      # ── SATA SSD > 82% ────────────────────────────────────────────────────
+      - uid: oryx-disk-ssd-high
+        title: SSD Disk Full
+        condition: threshold
+        data:
+          - refId: A
+            datasourceUid: prometheus
+            model:
+              expr: 100 - (node_filesystem_avail_bytes{mountpoint="/mnt/ssd"} / node_filesystem_size_bytes{mountpoint="/mnt/ssd"} * 100)
+              refId: A
+          - refId: threshold
+            datasourceUid: __expr__
+            model:
+              type: threshold
+              refId: threshold
+              expression: A
+              conditions:
+                - evaluator:
+                    type: gt
+                    params: [82]
+                  operator:
+                    type: and
+                  query:
+                    params: [A]
+                  reducer:
+                    type: last
+        noDataState: NoData
+        execErrState: Error
+        for: 5m
+        annotations:
+          summary: "SSD disk usage is {{ humanize $values.A.Value }}% on oryx"
+        labels:
+          severity: critical
+        isPaused: false
+
+      # ── Container down ────────────────────────────────────────────────────
+      - uid: oryx-container-down
+        title: Container Down
+        condition: threshold
+        data:
+          - refId: A
+            datasourceUid: prometheus
+            model:
+              expr: count(container_last_seen{name!=""} offset 2m) - count(container_last_seen{name!=""})
+              refId: A
+          - refId: threshold
+            datasourceUid: __expr__
+            model:
+              type: threshold
+              refId: threshold
+              expression: A
+              conditions:
+                - evaluator:
+                    type: gt
+                    params: [0]
+                  operator:
+                    type: and
+                  query:
+                    params: [A]
+                  reducer:
+                    type: last
+        noDataState: NoData
+        execErrState: Error
+        for: 2m
+        annotations:
+          summary: "A container has stopped on oryx"
+        labels:
+          severity: critical
+        isPaused: false
