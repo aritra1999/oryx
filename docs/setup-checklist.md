@@ -199,12 +199,12 @@ Backs up to an external drive at `/mnt/backup` — weekly via systemd timer.
 
 ## Secrets — store in Proton Pass
 
-- [ ] Pi-hole web password
-- [ ] Cloudflare Tunnel token
-- [ ] Immich DB password
-- [ ] Nextcloud admin password
-- [ ] AFFiNE admin password
-- [ ] Shared PostgreSQL password
-- [ ] Grafana admin password
-- [ ] Discord webhook URL
-- [ ] Tailscale IP (`100.106.157.117`)
+- [x] Pi-hole web password
+- [x] Cloudflare Tunnel token
+- [x] Immich DB password
+- [x] Nextcloud admin password
+- [x] AFFiNE admin password
+- [x] Shared PostgreSQL password
+- [x] Grafana admin password
+- [x] Discord webhook URL
+- [x] Tailscale IP (`100.106.157.117`)
