@@ -140,7 +140,12 @@
         "sendBody": true,
         "contentType": "raw",
         "rawContentType": "application/json",
-        "body": "={{ $json.body }}"
+        "body": "={{ $json.body }}",
+        "options": {
+          "retryOnFail": true,
+          "maxTries": 5,
+          "waitBetweenTries": 10000
+        }
       }
     },
     {
