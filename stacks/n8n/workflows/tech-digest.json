@@ -6,7 +6,10 @@
       "name": "Schedule — 7am Daily",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.1,
-      "position": [200, 360],
+      "position": [
+        200,
+        360
+      ],
       "parameters": {
         "rule": {
           "interval": [
@@ -23,7 +26,10 @@
       "name": "RSS — Hacker News",
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1,
-      "position": [460, 120],
+      "position": [
+        460,
+        120
+      ],
       "parameters": {
         "url": "https://news.ycombinator.com/rss"
       }
@@ -33,7 +39,10 @@
       "name": "RSS — Ars Technica",
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1,
-      "position": [460, 300],
+      "position": [
+        460,
+        300
+      ],
       "parameters": {
         "url": "https://feeds.arstechnica.com/arstechnica/technology-lab"
       }
@@ -43,7 +52,10 @@
       "name": "RSS — The Verge",
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1,
-      "position": [460, 480],
+      "position": [
+        460,
+        480
+      ],
       "parameters": {
         "url": "https://www.theverge.com/rss/index.xml"
       }
@@ -53,7 +65,10 @@
       "name": "RSS — TechCrunch",
       "type": "n8n-nodes-base.rssFeedRead",
       "typeVersion": 1,
-      "position": [460, 660],
+      "position": [
+        460,
+        660
+      ],
       "parameters": {
         "url": "https://techcrunch.com/feed/"
       }
@@ -63,7 +78,10 @@
       "name": "Merge HN + Ars",
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3,
-      "position": [700, 210],
+      "position": [
+        700,
+        210
+      ],
       "parameters": {
         "mode": "append"
       }
@@ -73,7 +91,10 @@
       "name": "Merge Verge + TC",
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3,
-      "position": [700, 570],
+      "position": [
+        700,
+        570
+      ],
       "parameters": {
         "mode": "append"
       }
@@ -83,7 +104,10 @@
       "name": "Merge All Feeds",
       "type": "n8n-nodes-base.merge",
       "typeVersion": 3,
-      "position": [940, 380],
+      "position": [
+        940,
+        380
+      ],
       "parameters": {
         "mode": "append"
       }
@@ -93,9 +117,12 @@
       "name": "Filter + Build Prompt",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1180, 380],
+      "position": [
+        1180,
+        380
+      ],
       "parameters": {
-        "jsCode": "const cutoff = Date.now() - 24 * 60 * 60 * 1000;\n\nconst recent = $input.all().filter(item => {\n  const date = new Date(item.json.isoDate || item.json.pubDate || 0).getTime();\n  return date > cutoff;\n});\n\nif (recent.length === 0) {\n  throw new Error('No articles published in the last 24 hours — nothing to digest.');\n}\n\nconst articles = recent\n  .sort((a, b) => new Date(b.json.isoDate || 0) - new Date(a.json.isoDate || 0))\n  .map(item => {\n    const title = (item.json.title || 'Untitled').replace(/\\n/g, ' ').trim();\n    const link = item.json.link || '';\n    const snippet = (item.json.contentSnippet || item.json.content || '')\n      .replace(/<[^>]*>/g, '')\n      .replace(/\\s+/g, ' ')\n      .slice(0, 400)\n      .trim();\n    return `- ${title}\\n  ${link}${snippet ? '\\n  ' + snippet : ''}`;\n  })\n  .join('\\n\\n');\n\nconst prompt = `You are a tech news curator. From the articles below select the 10 most important stories. Return ONLY a valid JSON array — no prose, no markdown fences, no explanation.\\n\\nEach element must have exactly these fields:\\n- \\"section\\": thematic group with emoji (e.g. \\"⚖️ Legal\\", \\"🤖 AI & Models\\", \\"📱 Industry\\", \\"🔐 Security\\", \\"🛠️ Dev & Tooling\\")\\n- \\"title\\": story title, max 80 chars\\n- \\"url\\": article URL\\n- \\"summary\\": one sentence max 150 chars — what happened and why it matters to a software engineer\\n- \\"tags\\": array of 3–4 lowercase tag strings\\n\\nArticles (past 24h):\\n\\n${articles}`;\n\nconst body = JSON.stringify({\n  contents: [{ parts: [{ text: prompt }] }],\n  generationConfig: { temperature: 0.3, maxOutputTokens: 2048, responseMimeType: 'application/json' }\n});\n\nreturn [{ json: { body, articleCount: recent.length } }];"
+        "jsCode": "const cutoff = Date.now() - 24 * 60 * 60 * 1000;\n\nconst recent = $input.all().filter(item => {\n  const date = new Date(item.json.isoDate || item.json.pubDate || 0).getTime();\n  return date > cutoff;\n});\n\nif (recent.length === 0) {\n  throw new Error('No articles published in the last 24 hours — nothing to digest.');\n}\n\nconst articles = recent\n  .sort((a, b) => new Date(b.json.isoDate || 0) - new Date(a.json.isoDate || 0))\n  .map(item => {\n    const title = (item.json.title || 'Untitled').replace(/\\n/g, ' ').trim();\n    const link = item.json.link || '';\n    const snippet = (item.json.contentSnippet || item.json.content || '')\n      .replace(/<[^>]*>/g, '')\n      .replace(/\\s+/g, ' ')\n      .slice(0, 400)\n      .trim();\n    return `- ${title}\\n  ${link}${snippet ? '\\n  ' + snippet : ''}`;\n  })\n  .join('\\n\\n');\n\nconst prompt = `You are a tech news curator. From the articles below select the 10 most important stories. Return ONLY a valid JSON array — no prose, no markdown fences, no explanation.\n\nEach element must have exactly these fields:\n- \"section\": thematic group with emoji (e.g. \"⚖️ Legal\", \"🤖 AI & Models\", \"📱 Industry\", \"🔐 Security\", \"🛠️ Dev & Tooling\")\n- \"title\": story title, max 80 chars\n- \"url\": article URL\n- \"summary\": one sentence max 150 chars — what happened and why it matters to a software engineer\n- \"tags\": array of 3–4 lowercase tag strings\n\nArticles (past 24h):\n\n${articles}`;\n\nconst body = JSON.stringify({\n  contents: [{ parts: [{ text: prompt }] }],\n  generationConfig: { temperature: 0.3, maxOutputTokens: 2048, responseMimeType: 'application/json' }\n});\n\nreturn [{ json: { body, articleCount: recent.length } }];"
       }
     },
     {
@@ -103,7 +130,10 @@
       "name": "Gemini 3.8 Flash",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1420, 380],
+      "position": [
+        1420,
+        380
+      ],
       "parameters": {
         "method": "POST",
         "url": "=https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key={{ $env.N8N_GEMINI_API_KEY }}",
@@ -118,7 +148,10 @@
       "name": "Extract Digest",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
-      "position": [1660, 380],
+      "position": [
+        1660,
+        380
+      ],
       "parameters": {
         "jsCode": "const response = $input.first().json;\nconst text = response?.candidates?.[0]?.content?.parts?.[0]?.text;\nif (!text) {\n  throw new Error('Gemini returned no text. Response: ' + JSON.stringify(response));\n}\n\n// Strip accidental markdown fences\nconst clean = text.trim().replace(/^```json\\s*/i, '').replace(/```\\s*$/, '').trim();\n\nlet stories;\ntry {\n  stories = JSON.parse(clean);\n} catch (e) {\n  throw new Error('Gemini response was not valid JSON: ' + clean.slice(0, 300));\n}\n\nif (!Array.isArray(stories)) throw new Error('Expected a JSON array from Gemini');\n\n// Return one item per story — n8n runs Send to Discord once per item\nreturn stories.slice(0, 10).map(s => ({ json: s }));"
       }
@@ -128,7 +161,10 @@
       "name": "Send to Discord",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
-      "position": [1900, 380],
+      "position": [
+        1900,
+        380
+      ],
       "parameters": {
         "method": "POST",
         "url": "={{ $env.N8N_DISCORD_WEBHOOK_URL }}",
@@ -141,23 +177,141 @@
   ],
   "connections": {
     "Schedule — 7am Daily": {
-      "main": [[
-        { "node": "RSS — Hacker News",  "type": "main", "index": 0 },
-        { "node": "RSS — Ars Technica", "type": "main", "index": 0 },
-        { "node": "RSS — The Verge",    "type": "main", "index": 0 },
-        { "node": "RSS — TechCrunch",   "type": "main", "index": 0 }
-      ]]
+      "main": [
+        [
+          {
+            "node": "RSS — Hacker News",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS — Ars Technica",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS — The Verge",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "RSS — TechCrunch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     },
-    "RSS — Hacker News":  { "main": [[{ "node": "Merge HN + Ars",  "type": "main", "index": 0 }]] },
-    "RSS — Ars Technica": { "main": [[{ "node": "Merge HN + Ars",  "type": "main", "index": 1 }]] },
-    "RSS — The Verge":    { "main": [[{ "node": "Merge Verge + TC", "type": "main", "index": 0 }]] },
-    "RSS — TechCrunch":   { "main": [[{ "node": "Merge Verge + TC", "type": "main", "index": 1 }]] },
-    "Merge HN + Ars":     { "main": [[{ "node": "Merge All Feeds",  "type": "main", "index": 0 }]] },
-    "Merge Verge + TC":   { "main": [[{ "node": "Merge All Feeds",  "type": "main", "index": 1 }]] },
-    "Merge All Feeds":    { "main": [[{ "node": "Filter + Build Prompt", "type": "main", "index": 0 }]] },
-    "Filter + Build Prompt": { "main": [[{ "node": "Gemini 3.8 Flash", "type": "main", "index": 0 }]] },
-    "Gemini 3.8 Flash":   { "main": [[{ "node": "Extract Digest", "type": "main", "index": 0 }]] },
-    "Extract Digest":     { "main": [[{ "node": "Send to Discord", "type": "main", "index": 0 }]] }
+    "RSS — Hacker News": {
+      "main": [
+        [
+          {
+            "node": "Merge HN + Ars",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS — Ars Technica": {
+      "main": [
+        [
+          {
+            "node": "Merge HN + Ars",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "RSS — The Verge": {
+      "main": [
+        [
+          {
+            "node": "Merge Verge + TC",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RSS — TechCrunch": {
+      "main": [
+        [
+          {
+            "node": "Merge Verge + TC",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge HN + Ars": {
+      "main": [
+        [
+          {
+            "node": "Merge All Feeds",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Merge Verge + TC": {
+      "main": [
+        [
+          {
+            "node": "Merge All Feeds",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge All Feeds": {
+      "main": [
+        [
+          {
+            "node": "Filter + Build Prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter + Build Prompt": {
+      "main": [
+        [
+          {
+            "node": "Gemini 3.8 Flash",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini 3.8 Flash": {
+      "main": [
+        [
+          {
+            "node": "Extract Digest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Digest": {
+      "main": [
+        [
+          {
+            "node": "Send to Discord",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
   },
   "active": false,
   "settings": {
