@@ -155,12 +155,14 @@ Detailed commands for every step are in [`docs/setup.md`](setup.md).
 - [x] Import Node Exporter dashboard (ID: 1860)
 - [x] Import cAdvisor dashboard (ID: 14282)
 - [x] Import Blackbox Exporter dashboard (ID: 7587)
-- [ ] Set node key to never expire in Tailscale admin console
-- [ ] Add Discord webhook contact point, send test
-- [ ] Create CPU alert (> 85% for 5 min)
-- [ ] Create RAM alert (> 88% for 5 min)
-- [ ] Create disk full alert (> 82%)
-- [ ] Create container down alert
+- [x] Custom oryx dashboard provisioned
+- [x] Discord contact point configured
+- [x] CPU alert (> 85% for 5 min)
+- [x] RAM alert (> 88% for 5 min)
+- [x] Disk full alert (> 82%)
+- [x] Container down alert
+- [x] SSL cert expiry alert (< 30 days)
+- [ ] Set Tailscale node key to never expire
 
 ---
 
