@@ -162,7 +162,7 @@
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
-        1900,
+        1980,
         380
       ],
       "parameters": {
@@ -172,6 +172,20 @@
         "contentType": "raw",
         "rawContentType": "application/json",
         "body": "={{ JSON.stringify({ username: 'Tech Digest', content: $json.section + '\\n**' + $json.title + '** ([read](' + $json.url + '))\\n' + $json.summary + '\\n' + ($json.tags || []).map(t => '`#' + t + '`').join(' ') }) }}"
+      }
+    },
+    {
+      "id": "d1e2f3a4-0013-0000-0000-000000000013",
+      "name": "Rate Limit Delay",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1780,
+        380
+      ],
+      "parameters": {
+        "amount": 1,
+        "unit": "seconds"
       }
     }
   ],
@@ -302,6 +316,17 @@
       ]
     },
     "Extract Digest": {
+      "main": [
+        [
+          {
+            "node": "Rate Limit Delay",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rate Limit Delay": {
       "main": [
         [
           {
