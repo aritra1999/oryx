@@ -128,24 +128,14 @@
     {
       "id": "d1e2f3a4-0010-0000-0000-000000000010",
       "name": "Gemini 3.8 Flash",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 4.2,
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
       "position": [
         1420,
         380
       ],
       "parameters": {
-        "method": "POST",
-        "url": "=https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key={{ $env.N8N_GEMINI_API_KEY }}",
-        "sendBody": true,
-        "contentType": "raw",
-        "rawContentType": "application/json",
-        "body": "={{ $json.body }}",
-        "options": {
-          "retryOnFail": true,
-          "maxTries": 5,
-          "waitBetweenTries": 10000
-        }
+        "jsCode": "const body = $input.first().json.body;\nconst url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key=${$env.N8N_GEMINI_API_KEY}`;\n\nconst MAX_ATTEMPTS = 5;\nconst WAIT_MS = 12000;\n\nfor (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {\n  const res = await fetch(url, {\n    method: 'POST',\n    headers: { 'Content-Type': 'application/json' },\n    body: body\n  });\n\n  if (res.status === 503) {\n    if (attempt < MAX_ATTEMPTS) {\n      await new Promise(r => setTimeout(r, WAIT_MS));\n      continue;\n    }\n    throw new Error(`Gemini returned 503 after ${MAX_ATTEMPTS} attempts — try again later.`);\n  }\n\n  if (!res.ok) {\n    const text = await res.text();\n    throw new Error(`Gemini API error ${res.status}: ${text.slice(0, 300)}`);\n  }\n\n  const data = await res.json();\n  return [{ json: data }];\n}"
       }
     },
     {
