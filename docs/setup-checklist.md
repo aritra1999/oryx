@@ -197,7 +197,7 @@ Backs up to an external drive at `/mnt/backup` — weekly via systemd timer.
 
 ---
 
-## Secrets — store in Bitwarden
+## Secrets — store in Proton Pass
 
 - [ ] Pi-hole web password
 - [ ] Cloudflare Tunnel token
@@ -207,3 +207,4 @@ Backs up to an external drive at `/mnt/backup` — weekly via systemd timer.
 - [ ] Shared PostgreSQL password
 - [ ] Grafana admin password
 - [ ] Discord webhook URL
+- [ ] Tailscale IP (`100.106.157.117`)
