@@ -226,7 +226,7 @@ groups:
               to: 0
             datasourceUid: prometheus
             model:
-              expr: count(container_last_seen{name!=""} offset 2m) - count(container_last_seen{name!=""})
+              expr: count(container_last_seen{name!="",name!~"affine_migration|.*migration.*|.*init.*"} offset 2m) - count(container_last_seen{name!="",name!~"affine_migration|.*migration.*|.*init.*"})
               refId: A
               instant: true
           - refId: threshold
