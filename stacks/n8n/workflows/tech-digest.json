@@ -184,7 +184,7 @@
         380
       ],
       "parameters": {
-        "amount": 1,
+        "amount": 3,
         "unit": "seconds"
       }
     }
