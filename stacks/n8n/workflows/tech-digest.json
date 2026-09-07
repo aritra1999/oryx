@@ -127,7 +127,7 @@
     },
     {
       "id": "d1e2f3a4-0010-0000-0000-000000000010",
-      "name": "Gemini 3.8 Flash",
+      "name": "Gemini 3.5 Flash Lite",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
@@ -136,7 +136,7 @@
       ],
       "parameters": {
         "method": "POST",
-        "url": "=https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key={{ $env.N8N_GEMINI_API_KEY }}",
+        "url": "=https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash-lite:generateContent?key={{ $env.N8N_GEMINI_API_KEY }}",
         "sendBody": true,
         "contentType": "raw",
         "rawContentType": "application/json",
@@ -307,17 +307,6 @@
         ]
       ]
     },
-    "Gemini 3.8 Flash": {
-      "main": [
-        [
-          {
-            "node": "Extract Digest",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Extract Digest": {
       "main": [
         [
@@ -334,6 +323,17 @@
         [
           {
             "node": "Send to Discord",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gemini 3.5 Flash Lite": {
+      "main": [
+        [
+          {
+            "node": "Extract Digest",
             "type": "main",
             "index": 0
           }
