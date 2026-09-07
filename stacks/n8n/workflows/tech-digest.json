@@ -122,12 +122,12 @@
         380
       ],
       "parameters": {
-        "jsCode": "const cutoff = Date.now() - 24 * 60 * 60 * 1000;\n\nconst recent = $input.all().filter(item => {\n  const date = new Date(item.json.isoDate || item.json.pubDate || 0).getTime();\n  return date > cutoff;\n});\n\nif (recent.length === 0) {\n  throw new Error('No articles published in the last 24 hours — nothing to digest.');\n}\n\nconst articles = recent\n  .sort((a, b) => new Date(b.json.isoDate || 0) - new Date(a.json.isoDate || 0))\n  .map(item => {\n    const title = (item.json.title || 'Untitled').replace(/\\n/g, ' ').trim();\n    const link = item.json.link || '';\n    const snippet = (item.json.contentSnippet || item.json.content || '')\n      .replace(/<[^>]*>/g, '')\n      .replace(/\\s+/g, ' ')\n      .slice(0, 400)\n      .trim();\n    return `- ${title}\\n  ${link}${snippet ? '\\n  ' + snippet : ''}`;\n  })\n  .join('\\n\\n');\n\nconst prompt = `You are a tech news curator writing a daily reading digest for a software engineer. From the articles below select the 10 most important stories. Return ONLY a valid JSON array — no prose, no markdown fences, no explanation.\n\nEach element must have exactly these fields:\n- \"section\": thematic group with emoji (e.g. \"⚖️ Legal\", \"🤖 AI & Models\", \"📱 Industry\", \"🔐 Security\", \"🛠️ Dev & Tooling\")\n- \"title\": story title, max 80 chars\n- \"url\": article URL\n- \"summary\": 4–5 sentences (max 800 chars). Cover: what happened, the key technical or business detail, why it matters to a software engineer, and any notable implication or next step to watch.\n- \"tags\": array of 3–4 lowercase tag strings\n\nArticles (past 24h):\n\n${articles}`;\n\nconst body = JSON.stringify({\n  model: 'llama-3.3-70b-versatile',\n  messages: [{ role: 'user', content: prompt }],\n  response_format: { type: 'json_object' },\n  temperature: 0.3,\n  max_tokens: 2048\n});\n\nreturn [{ json: { body, articleCount: recent.length } }];"
+        "jsCode": "const cutoff = Date.now() - 24 * 60 * 60 * 1000;\n\nconst recent = $input.all().filter(item => {\n  const date = new Date(item.json.isoDate || item.json.pubDate || 0).getTime();\n  return date > cutoff;\n});\n\nif (recent.length === 0) {\n  throw new Error('No articles published in the last 24 hours — nothing to digest.');\n}\n\nconst articles = recent\n  .sort((a, b) => new Date(b.json.isoDate || 0) - new Date(a.json.isoDate || 0))\n  .map(item => {\n    const title = (item.json.title || 'Untitled').replace(/\\n/g, ' ').trim();\n    const link = item.json.link || '';\n    const snippet = (item.json.contentSnippet || item.json.content || '')\n      .replace(/<[^>]*>/g, '')\n      .replace(/\\s+/g, ' ')\n      .slice(0, 400)\n      .trim();\n    return `- ${title}\\n  ${link}${snippet ? '\\n  ' + snippet : ''}`;\n  })\n  .join('\\n\\n');\n\nconst prompt = `You are a tech news curator writing a daily reading digest for a software engineer. From the articles below select the 10 most important stories. Return ONLY a valid JSON array — no prose, no markdown fences, no explanation.\n\nEach element must have exactly these fields:\n- \"section\": thematic group with emoji (e.g. \"⚖️ Legal\", \"🤖 AI & Models\", \"📱 Industry\", \"🔐 Security\", \"🛠️ Dev & Tooling\")\n- \"title\": story title, max 80 chars\n- \"url\": article URL\n- \"summary\": 4–5 sentences (max 800 chars). Cover: what happened, the key technical or business detail, why it matters to a software engineer, and any notable implication or next step to watch.\n- \"tags\": array of 3–4 lowercase tag strings\n\nArticles (past 24h):\n\n${articles}`;\n\nconst body = JSON.stringify({\n  contents: [{ parts: [{ text: prompt }] }],\n  generationConfig: { temperature: 0.3, maxOutputTokens: 2048, responseMimeType: 'application/json' }\n});\n\nreturn [{ json: { body, articleCount: recent.length } }];"
       }
     },
     {
       "id": "d1e2f3a4-0010-0000-0000-000000000010",
-      "name": "Groq — llama-3.3-70b",
+      "name": "Gemini 3.8 Flash",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
@@ -136,20 +136,14 @@
       ],
       "parameters": {
         "method": "POST",
-        "url": "https://api.groq.com/openai/v1/chat/completions",
+        "url": "=https://generativelanguage.googleapis.com/v1beta/models/gemini-3.8-flash:generateContent?key={{ $env.N8N_GEMINI_API_KEY }}",
         "sendBody": true,
         "contentType": "raw",
         "rawContentType": "application/json",
         "body": "={{ $json.body }}",
-        "sendHeaders": true,
-        "headerParameters": {
-          "parameters": [
-            {
-              "name": "Authorization",
-              "value": "=Bearer {{ $env.N8N_GROQ_API_KEY }}"
-            }
-          ]
-        }
+        "retryOnFail": true,
+        "maxTries": 5,
+        "waitBetweenTries": 12000
       }
     },
     {
@@ -162,7 +156,7 @@
         380
       ],
       "parameters": {
-        "jsCode": "const response = $input.first().json;\n\n// Groq returns OpenAI-compatible format: choices[0].message.content\nconst text = response?.choices?.[0]?.message?.content;\nif (!text) {\n  throw new Error('No content from Groq. Response: ' + JSON.stringify(response).slice(0, 500));\n}\n\nlet stories;\n\nif (Array.isArray(text)) {\n  stories = text;\n} else if (typeof text === 'string') {\n  const start = text.indexOf('[');\n  const end = text.lastIndexOf(']');\n  if (start === -1 || end === -1) {\n    throw new Error('No JSON array in response: ' + text.slice(0, 500));\n  }\n  try {\n    stories = JSON.parse(text.slice(start, end + 1));\n  } catch (e) {\n    throw new Error('JSON parse failed: ' + e.message + '\\nRaw: ' + text.slice(start, start + 500));\n  }\n} else {\n  throw new Error('Unexpected type: ' + typeof text + ' — ' + JSON.stringify(text).slice(0, 300));\n}\n\nif (!Array.isArray(stories)) throw new Error('Expected a JSON array, got: ' + typeof stories);\n\nreturn stories.slice(0, 10).map(s => ({ json: s }));"
+        "jsCode": "const response = $input.first().json;\nconst text = response?.candidates?.[0]?.content?.parts?.[0]?.text;\nif (text === undefined || text === null) {\n  throw new Error('Gemini returned no text. Response: ' + JSON.stringify(response).slice(0, 500));\n}\n\nlet stories;\n\nif (Array.isArray(text)) {\n  // n8n auto-parsed the JSON response for us\n  stories = text;\n} else if (typeof text === 'string') {\n  const start = text.indexOf('[');\n  const end = text.lastIndexOf(']');\n  if (start === -1 || end === -1) {\n    throw new Error('No JSON array in string response: ' + text.slice(0, 500));\n  }\n  try {\n    stories = JSON.parse(text.slice(start, end + 1));\n  } catch (e) {\n    throw new Error('JSON parse failed: ' + e.message + '\\nRaw: ' + text.slice(start, start + 500));\n  }\n} else {\n  throw new Error('Unexpected type for text: ' + typeof text + ' — ' + JSON.stringify(text).slice(0, 300));\n}\n\nif (!Array.isArray(stories)) throw new Error('Expected a JSON array, got: ' + typeof stories);\n\nreturn stories.slice(0, 10).map(s => ({ json: s }));"
       }
     },
     {
@@ -313,6 +307,17 @@
         ]
       ]
     },
+    "Gemini 3.8 Flash": {
+      "main": [
+        [
+          {
+            "node": "Extract Digest",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
     "Extract Digest": {
       "main": [
         [
@@ -329,17 +334,6 @@
         [
           {
             "node": "Send to Discord",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Groq — llama-3.3-70b": {
-      "main": [
-        [
-          {
-            "node": "Extract Digest",
             "type": "main",
             "index": 0
           }

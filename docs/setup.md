@@ -432,7 +432,7 @@ AFFINE_ADMIN_PASSWORD=<strong_password>
 NEXTCLOUD_ADMIN_USER=aritra
 NEXTCLOUD_ADMIN_PASSWORD=<strong_password>
 N8N_ENCRYPTION_KEY=<strong_random_secret>   # used to encrypt stored credentials
-N8N_GROQ_API_KEY=<groq_api_key>             # from console.groq.com
+N8N_GEMINI_API_KEY=<gemini_api_key>         # from Google AI Studio
 N8N_DISCORD_WEBHOOK_URL=<webhook_url>       # Discord server → Edit Channel → Integrations → Webhooks
 ```
 
