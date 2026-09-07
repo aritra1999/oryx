@@ -186,13 +186,13 @@ Backs up to an external drive at `/mnt/backup` — weekly via systemd timer.
 
 ## Final checks
 
-- [ ] All containers running, none in `Exited` state
-- [ ] All public subdomains load correctly
+- [x] All containers running, none in `Exited` state
+- [x] All public subdomains load correctly
 - [ ] SSH via Tailscale works from outside home network
 - [ ] Pi-hole blocking ads on home network
-- [ ] Grafana shows live CPU/RAM/disk metrics
-- [ ] Discord test alert fires and is received
-- [ ] Grafana Blackbox dashboard shows all services green
+- [x] Grafana shows live CPU/RAM/disk metrics
+- [x] Discord test alert fires and is received
+- [x] Grafana Blackbox dashboard shows all services green
 - [ ] Plug in external drive, run `check-mount.sh`, confirm backup scripts work
 
 ---
