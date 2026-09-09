@@ -9,82 +9,34 @@ pages:
   - name: Home
     columns:
 
-      # ── Left sidebar — system, DNS, stats, admin ─────────────────────────
+      # ── Left sidebar — time, weather, calendar ────────────────────────────
       - size: small
         widgets:
 
-          - type: server-stats
-            title: System
-            servers:
-              - type: local
-                name: oryx
-                mountpoints:
-                  "/":
-                    name: NVMe
-                  "/mnt/ssd":
-                    name: SSD
-                  "/boot/efi":
-                    hide: true
+          - type: clock
+            hour-format: 24h
+            timezones:
+              - timezone: Europe/Berlin
+                label: Berlin
+              - timezone: Asia/Kolkata
+                label: Kolkata
 
-          - type: custom-api
-            title: Photos
-            cache: 1h
-            url: http://immich-server:2283/api/server/statistics
-            headers:
-              x-api-key: ${IMMICH_API_KEY}
-              Accept: application/json
-            template: |
-              <div class="flex justify-between text-center">
-                <div>
-                  <div class="color-highlight size-h3">{{ .JSON.Int "photos" | formatNumber }}</div>
-                  <div class="size-h6">PHOTOS</div>
-                </div>
-                <div>
-                  <div class="color-highlight size-h3">{{ .JSON.Int "videos" | formatNumber }}</div>
-                  <div class="size-h6">VIDEOS</div>
-                </div>
-                <div>
-                  <div class="color-highlight size-h3">{{ div (.JSON.Int "usage" | toFloat) 1073741824 | toInt | formatNumber }}GB</div>
-                  <div class="size-h6">STORAGE</div>
-                </div>
-              </div>
+          - type: weather
+            location: Bonn, Germany
+            units: metric
+            hour-format: 24h
 
-          - type: monitor
-            title: Apps
-            cache: 1m
-            sites:
-              - title: Notes
-                url: https://notes.aritra.fyi
-                icon: si:affine
-              - title: Drive
-                url: https://drive.aritra.fyi
-                icon: si:nextcloud
-              - title: Photos
-                url: https://photos.aritra.fyi
-                icon: si:immich
+          - type: weather
+            location: Ljubljana, Slovenia
+            units: metric
+            hour-format: 24h
 
-          - type: monitor
-            title: Infra
-            cache: 1m
-            sites:
-              - title: Portainer
-                url: https://portainer.aritra.fyi
-                icon: si:portainer
-              - title: n8n
-                url: https://n8n.aritra.fyi
-                icon: si:n8n
-              - title: Grafana
-                url: https://grafana.aritra.fyi
-                icon: si:grafana
+          - type: weather
+            location: Kolkata, India
+            units: metric
+            hour-format: 24h
 
-          - type: bookmarks
-            title: Admin
-            groups:
-              - title: Admin
-                links:
-                  - title: Portainer
-                    url: https://portainer.aritra.fyi
-                    icon: si:portainer
+          - type: calendar
 
       # ── Main column — search, services, markets, news ────────────────────
       - size: full
@@ -151,34 +103,76 @@ pages:
                   - url: https://www.ft.com/rss/home/uk
                     title: Financial Times
 
-      # ── Right sidebar — time, weather, calendar ───────────────────────────
+      # ── Right sidebar — system, stats, monitors ──────────────────────────
       - size: small
         widgets:
 
-          - type: clock
-            hour-format: 24h
-            timezones:
-              - timezone: Europe/Berlin
-                label: Berlin
-              - timezone: Asia/Kolkata
-                label: Kolkata
+          - type: server-stats
+            title: System
+            servers:
+              - type: local
+                name: oryx
+                mountpoints:
+                  "/":
+                    name: NVMe
+                  "/mnt/ssd":
+                    name: SSD
+                  "/boot/efi":
+                    hide: true
 
-          - type: weather
-            location: Bonn, Germany
-            units: metric
-            hour-format: 24h
+          - type: custom-api
+            title: Photos
+            cache: 1h
+            url: http://immich-server:2283/api/server/statistics
+            headers:
+              x-api-key: ${IMMICH_API_KEY}
+              Accept: application/json
+            template: |
+              <div class="flex justify-between text-center">
+                <div>
+                  <div class="color-highlight size-h3">{{ .JSON.Int "photos" | formatNumber }}</div>
+                  <div class="size-h6">PHOTOS</div>
+                </div>
+                <div>
+                  <div class="color-highlight size-h3">{{ .JSON.Int "videos" | formatNumber }}</div>
+                  <div class="size-h6">VIDEOS</div>
+                </div>
+                <div>
+                  <div class="color-highlight size-h3">{{ div (.JSON.Int "usage" | toFloat) 1073741824 | toInt | formatNumber }}GB</div>
+                  <div class="size-h6">STORAGE</div>
+                </div>
+              </div>
 
-          - type: weather
-            location: Ljubljana, Slovenia
-            units: metric
-            hour-format: 24h
+          - type: monitor
+            title: Apps
+            cache: 1m
+            sites:
+              - title: Notes
+                url: https://notes.aritra.fyi
+                icon: si:affine
+              - title: Drive
+                url: https://drive.aritra.fyi
+                icon: si:nextcloud
+              - title: Photos
+                url: https://photos.aritra.fyi
+                icon: si:immich
+              - title: Charts
+                url: https://charts.aritra.fyi
+                icon: si:budibase
 
-          - type: weather
-            location: Kolkata, India
-            units: metric
-            hour-format: 24h
-
-          - type: calendar
+          - type: monitor
+            title: Infra
+            cache: 1m
+            sites:
+              - title: Portainer
+                url: https://portainer.aritra.fyi
+                icon: si:portainer
+              - title: n8n
+                url: https://n8n.aritra.fyi
+                icon: si:n8n
+              - title: Grafana
+                url: https://grafana.aritra.fyi
+                icon: si:grafana
 
   # ── System page ────────────────────────────────────────────────────────────
   - name: System
