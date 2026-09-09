@@ -17,6 +17,7 @@ services:
       - '--storage.tsdb.path=/prometheus'
       - '--storage.tsdb.retention.time=30d'
       - '--storage.tsdb.retention.size=14GB'
+      - '--web.enable-lifecycle'
     restart: unless-stopped
     networks:
       - server-net

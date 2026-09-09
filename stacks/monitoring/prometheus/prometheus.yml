@@ -5,7 +5,7 @@ global:
 scrape_configs:
   - job_name: node
     static_configs:
-      - targets: ['192.168.2.100:9100']   # node-exporter on host network
+      - targets: ['100.106.157.117:9100']  # node-exporter on host network (Tailscale)
 
   - job_name: cadvisor
     static_configs:
