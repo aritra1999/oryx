@@ -1,0 +1,5 @@
+# Personal financial data — never commit
+stacks/charts/seed/data.json
+
+# Stack .env files contain secrets
+stacks/**/.env

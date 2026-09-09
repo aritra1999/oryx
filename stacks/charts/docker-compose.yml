@@ -1,0 +1,39 @@
+networks:
+  server-net:
+    external: true
+
+services:
+
+  budibase:
+    image: budibase/budibase:latest
+    container_name: budibase
+    ports:
+      - "10000:10000"
+    environment:
+      JWT_SECRET: ${BB_JWT_SECRET}
+      MINIO_ACCESS_KEY: ${BB_MINIO_ACCESS_KEY}
+      MINIO_SECRET_KEY: ${BB_MINIO_SECRET_KEY}
+      REDIS_PASSWORD: ${BB_REDIS_PASSWORD}
+      COUCHDB_PASSWORD: ${BB_COUCHDB_PASSWORD}
+      COUCHDB_USER: ${BB_COUCHDB_USER}
+      BB_ADMIN_USER_EMAIL: ${BB_ADMIN_EMAIL}
+      BB_ADMIN_USER_PASSWORD: ${BB_ADMIN_PASSWORD}
+      AUTOMATION_MAX_ITERATIONS: 100
+    volumes:
+      - /opt/budibase:/data
+    restart: unless-stopped
+    networks:
+      - server-net
+
+  scheduler:
+    build: ./scheduler
+    container_name: budibase-scheduler
+    environment:
+      BB_API_KEY: ${BB_API_KEY}
+      BB_APP_ID: ${BB_APP_ID}
+      BB_BASE_URL: http://budibase:10000
+    restart: unless-stopped
+    depends_on:
+      - budibase
+    networks:
+      - server-net
