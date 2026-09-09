@@ -23,8 +23,5 @@ ingress:
   - hostname: n8n.aritra.fyi
     service: http://n8n:5678
 
-  - hostname: charts.aritra.fyi
-    service: http://budibase:80
-
   # catch-all
   - service: http_status:404

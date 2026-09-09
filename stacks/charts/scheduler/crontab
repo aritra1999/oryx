@@ -1,9 +1,0 @@
-# All times UTC
-# 1. FX rate refresh         08:00 UTC
-0 8 * * *  /usr/local/bin/python /app/fx_rates.py        >> /var/log/cron.log 2>&1
-# 2. Recurring investments   06:00 UTC
-0 6 * * *  /usr/local/bin/python /app/recurring.py       >> /var/log/cron.log 2>&1
-# 3. Price refresh           17:00 UTC (≈21:00 IST / 18:00 CEST)
-0 17 * * * /usr/local/bin/python /app/price_refresh.py   >> /var/log/cron.log 2>&1
-# 4. Net worth snapshot      18:00 UTC (after price refresh and FX)
-0 18 * * * /usr/local/bin/python /app/net_worth.py       >> /var/log/cron.log 2>&1

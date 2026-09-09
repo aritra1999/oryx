@@ -156,9 +156,6 @@ pages:
               - title: Photos
                 url: https://photos.aritra.fyi
                 icon: si:immich
-              - title: Charts
-                url: https://charts.aritra.fyi
-                icon: si:budibase
 
           - type: monitor
             title: Infra
