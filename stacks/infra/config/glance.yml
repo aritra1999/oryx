@@ -50,7 +50,7 @@ pages:
               </div>
 
           - type: monitor
-            title: Services
+            title: Apps
             cache: 1m
             sites:
               - title: Notes
@@ -62,15 +62,20 @@ pages:
               - title: Photos
                 url: https://photos.aritra.fyi
                 icon: si:immich
-              - title: Grafana
-                url: https://grafana.aritra.fyi
-                icon: si:grafana
+
+          - type: monitor
+            title: Infra
+            cache: 1m
+            sites:
               - title: Portainer
                 url: https://portainer.aritra.fyi
                 icon: si:portainer
               - title: n8n
                 url: https://n8n.aritra.fyi
                 icon: si:n8n
+              - title: Grafana
+                url: https://grafana.aritra.fyi
+                icon: si:grafana
 
           - type: bookmarks
             title: Admin
